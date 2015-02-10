@@ -689,9 +689,9 @@ $float_string="float:right;";
 <form class="login-form mt-lg" action="" method="post" name="authosharefrm" enctype="multipart/form-data">
 <div class="tabber" style="width: 95% !important;">
      <div class="tabbertab">
-	  <h2>Basic</h2>
+	  <h2>Sharing Settings</h2>
       <table class="table" style="margin:20px;font-size:1em;">
-	  <tr><th align="left">Select buttons & Display Sort Order</th></tr>
+	  <tr><th align="left">Select networks & Sort Order</th></tr>
                                 <tr>
                                     <td style="border: medium none;">
                                         <div style="text-align: right; border-bottom: 1px solid; margin-bottom: 5px;width: 180px;">
@@ -765,7 +765,7 @@ $float_string="float:right;";
 
 
      <div class="tabbertab">
-	  <h2>Style</h2>
+	  <h2>Share Bar Style</h2>
 	  <table class="table" style="margin:20px;font-size:1em;">
       <tr>
       <th align="left">Select Your Style</th></tr>
@@ -830,7 +830,7 @@ $float_string="float:right;";
         
 
      <div class="tabbertab">
-	  <h2>Counter</h2>
+	  <h2>Share Bar Counter</h2>
 	  <table class="table" style="margin:20px;font-size:1em;">
       <tr><th align="left">Counter Display</th></tr>
                                 <tr>
