@@ -459,7 +459,7 @@ add_filter( 'the_content', 'scsl_comment_login_post' );
     { 
     $display_content='<div style="clear:both;margin:10px 0px 10px 0px;">';
     $display_content .='<p>Login with your social profile</p>';
-    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scsl_site_id').'.js"></script>'.PHP_EOL;    
+    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scss_site_id').'.js"></script>'.PHP_EOL;    
     $js_buttons=scsl_get_preview('0');   
     $display_content .=$js_buttons;
     $display_content .='<br/>';
@@ -480,7 +480,7 @@ function scsl_login_buttons_show()
     {
     $display_content='<div style="clear:both;margin:10px 0px 10px 0px;">';
     $display_content='<h3 style="line-height:25px;">Login with your social profile</h3>';
-    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scsl_site_id').'.js"></script>'.PHP_EOL;    
+    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scss_site_id').'.js"></script>'.PHP_EOL;    
     $js_buttons=scsl_get_preview('0');   
     $display_content .=$js_buttons;
     $display_content .='<br/>';
