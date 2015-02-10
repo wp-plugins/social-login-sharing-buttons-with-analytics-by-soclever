@@ -34,6 +34,10 @@ function scss_activation(){
         update_option('scss_button_style','1');
         update_option('scss_share_autho','1');
         update_option('scss_domain',''); 
+        update_option('scsl_network','');
+        update_option('scsl_button_style','ic');
+        update_option('scsl_button_size','30');
+        
         
 	}
 
@@ -532,6 +536,8 @@ if((isset($_POST['save_share_1']) && sanitize_text_field($_POST['save_share_1'])
 update_option('scss_display_position',stripslashes(sanitize_text_field($_POST['scss_display_position'])));
 $social_buttons=""; $orders="";
 $sorting_arry=sanitize_text_field($_POST['short_order']);
+if(isset($_POST['share_button']) && count(sanitize_text_field($_POST['share_button'])) > 0)
+{
 foreach($_POST['share_button'] as $key=>$val)
 {
     $new_sorting_arr[$key]=sanitize_text_field($_POST['short_order'][$key]);
@@ -545,7 +551,7 @@ foreach($new_sorting_arr as $key=>$val)
     $orders .=",".$new_sorting_arr[$key];
     }
 }
-
+}
 update_option('scss_button_orders',$orders);
 update_option('scss_selected_buttons',$social_buttons);
 update_option('scss_counter_type',sanitize_text_field($_POST['counter_type']));
@@ -572,9 +578,10 @@ if(isset($_POST['save_login']) && $_POST['save_login']=='Save' )
 update_option('scsl_button_style',sanitize_text_field($_POST['scsl_button_style']));
 update_option('scsl_button_size',sanitize_text_field($_POST['scsl_button_size']));
 update_option('scsl_lending_page',sanitize_text_field($_POST['scsl_lending_page']));
+if(isset($_POST['scsl_network']))
+{
 update_option('scsl_network',sanitize_text_field(implode(",",$_POST['scsl_network'])));
-
-    
+}    
 }    
 
 function scsl_get_preview($is_preview='0')
@@ -730,6 +737,10 @@ $float_string="float:right;";
                                                     <?php 
                                                     }
                                                 }
+                                            }
+                                            else
+                                            {
+                                                ?><input type="hidden" name="share_button[0]" value="0" /> <?php
                                             }
                                              ?>
                                         </div>
@@ -908,7 +919,7 @@ $float_string="float:right;";
                                         <div class="clearfix">
                                             <div class="btn-toolbar pull-right">
                                             
-                                                <input type="submit" name="save_share_3" class="scssbutton" value="Save" />
+                                                <input type="submit" name="save_login" class="scssbutton" value="Save" />
                                             </div>
                                         </div>
                                     </td>
