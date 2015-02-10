@@ -1,19 +1,23 @@
 ﻿=== Social Login & Sharing buttons with Analytics By SoClever ===
 Contributors: Socleversocial
-Tags: facebook login, facebook connect, login buttons, social login, twitter login, google+ login, login with facebook
+Tags: facebook login, facebook connect, login buttons, social login, twitter login, google+ login, login with facebook, share bar, like bar, share buttons, facebook, whatsapp, twitter, google, linkedin, SoClever, Simple share buttons, share icons, Simple share buttons adder
 Requires at least: 3.0.1
 Tested up to: 4.1
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This module enables Social Login (Facebook and more), User Profile Data & Social Analytics on your site
+This module enables Social Login (Facebook and more) social sharing with detail User Profile Data & Social Analytics on your site
 
 == Description ==
  
-= Social Login & Social Sharing with Analytics By SoClever =
+= Social Login & Sharing buttons with Analytics By SoClever =
  
 SoClevers provides FREE social login tools to help increase conversions, registration rates, increase comments by allowing easier registrations. Our Plugin works with Facebook, Google+ LinkedIn, PayPal, Yahoo! & Instagram. Our JavaScript is asynchronous ensuring fast load time, and it is also dynamic so you can A-B test from our dashboard without needing to re-code.
+
+SoClever social sharing use Industry leading Asynchronous JavaScript for fasted load speed, not affecting site speed what so ever. 
+
+Customizable designs, size, position and shape. Select ours or load your own logo designs.
  
 Our social login icons are 100% customizable, size, shape and colour. Select ours or load your own logo icon designs.
  
@@ -29,6 +33,15 @@ Thanks for choosing our plugin, feel free to leave a review or contact us for an
  
 = Social Login =
 Eliminate registration forms and let your customer / visitors sign-up in few seconds using trusted IDs like Facebook, Twitter, Google, Yahoo, and more. Increase your sign-up rates and start building a loyal customer list today.
+
+= Social Sharing =
+Allow users to share your pages to famous social networks and get free traffic from social networks.
+
+= Sharing Reports from API =
+We use API provided by social networks to count shares of your website pages. It makes it possible to get accurate history of your page's shares.
+
+= Cookie Data =
+Unlike other FREE sharing buttons SoClever DOES NOT sell your customer cookie data which allows competitors to target your customers/visitors.
  
 = Track Revenue =
 Have an e-commerce site? Track revenue per social user, download customer segments to personalise your messaging. Segment your customers into groups to help future marketing efforts.
@@ -104,9 +117,10 @@ Our team answers your questions at: https://www.socleversocial.com/contact-us/
 1. SoClever Dashboard - Get Detailed reports of Social Logins on your site.
 2. Login Settings - Choose Social Network , sort order and choose Share bar display position.
 3. Wordpress Settings - Choose Login Buttons Size, Padding Gap and Display Style.
+4. Most Shared Pages Report - Get detailed Most Shared Pages Report on your SoClever Social Dashboard.
+5. Traffic Reffered to site Report - Get detailed reffered traffic report by Social Networks.
 
 
 == PHP Version ==
 
 PHP 5+ is preferred; PHP 4 is supported.
-
