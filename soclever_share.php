@@ -1048,6 +1048,8 @@ $float_string="float:right;";
 							Social Network Apps Set Up</a>
 						<a style="display:block;margin-left:10px;" href="https://www.socleversocial.com/about-us/" target="_blank">
 							About Soclever</a>	
+							<b> How to create Facebook App for your website</b><br />
+<iframe src="//player.vimeo.com/video/118392066?title=0&byline=0&portrait=0" width="800" height="481" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 					</div>
 				</div>
 
