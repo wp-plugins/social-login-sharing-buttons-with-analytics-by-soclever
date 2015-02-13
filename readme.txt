@@ -134,3 +134,8 @@ PHP 5+ is preferred; PHP 4 is supported.
 * Improved setting page
 * More sharing button designs
 * More functionality on setting page
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+* This version included more sharing button style options and more functions on Social login settings
