@@ -601,7 +601,7 @@ if(get_option('scss_valid_domain')=='1')
 
 function scsl_login_head()
 {
-    if(!is_user_logged_in() && get_option('scsl_show_comment')=='1')
+    if(!is_user_logged_in())
     {
     echo '<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/client_'.get_option('scss_site_id').'_login.js"></script>
 <script type="text/javascript">
@@ -620,7 +620,7 @@ add_action ('sidebar_login_widget_logged_out_content_end', 'scsl_login_buttons_s
 add_filter( 'login_form', 'scsl_login_buttons_show');
 function scsl_login_buttons_show()
  {
-    if(get_option('scsl_show_comment')=='1' && !is_user_logged_in() && get_option('scsl_show_in_loginform')=='1' )
+    if(!is_user_logged_in() && get_option('scsl_show_in_loginform')=='1' )
     {
     $js_buttons=scsl_get_preview('0');   
     $display_content .=$js_buttons;
@@ -1267,6 +1267,7 @@ $float_string="float:right;";
                 if(chk=="all") {
                     document.getElementById('share_button_'+i).checked=true;
                 }
+
                 else if(chk=="none") {
                     document.getElementById('share_button_'+i).checked=false;
                 }
