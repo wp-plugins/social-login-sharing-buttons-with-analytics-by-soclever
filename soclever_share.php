@@ -3,7 +3,7 @@
 Plugin Name: Social Login & Sharing buttons with Analytics By SoClever
 Plugin URI: https://www.socleversocial.com/
 Description: A simple and easy to use plugin that enables you to add share buttons to all of your posts and/or pages and login buttons for registering or commenting and get detailed report on our Soclever dashbaord.
-Version: 1.0.0
+Version: 1.1.0
 Author: Soclever Team
 Author URI: https://www.socleversocial.com/
 Author Email:info@socleversocial.com
@@ -37,6 +37,18 @@ function scss_activation(){
         update_option('scsl_network','');
         update_option('scsl_button_style','ic');
         update_option('scsl_button_size','30');
+        update_option('scsl_add_column','0');
+        update_option('scsl_email_notify','0');
+        update_option('scsl_use_avtar','0');
+        update_option('scsl_show_comment','0');
+        update_option('scsl_comment_auto_approve','0');
+        update_option('scsl_show_in_loginform','1');
+        update_option('scsl_login_form_redirect','current');
+        update_option('scsl_login_form_redirect_url','');
+        update_option('scsl_show_in_regpage','0');
+        update_option('scsl_reg_page_redirect','current');
+        update_option('scsl_reg_page_redirect_url','');
+        update_option('scsl_show_if_members_only','1');
         
         
 	}
@@ -60,6 +72,19 @@ function scss_uninstall()
         delete_option('scss_button_style');
         delete_option('scss_domain');
         delete_option('scss_share_autho');
+        delete_option('scsl_add_column');
+        delete_option('scsl_email_notify');
+        delete_option('scsl_use_avtar');
+        delete_option('scsl_show_comment');
+        delete_option('scsl_comment_auto_approve');
+        delete_option('scsl_show_in_loginform');
+        delete_option('scsl_login_form_redirect');
+        delete_option('scsl_login_form_redirect_url');
+        delete_option('scsl_show_in_regpage');
+        delete_option('scsl_reg_page_redirect');
+        delete_option('scsl_reg_page_redirect_url');
+        delete_option('scsl_show_if_members_only');
+
         
 	}
     
@@ -115,7 +140,12 @@ $notify_cs=file_get_contents("https://www.socleversocial.com/dashboard/track_reg
 if($notify_cs)
 {
     $red_url=($_COOKIE['lch']=='l' || $_COOKIE['lch']=='' )?get_site_url():$_COOKIE['lch'];
-    header("location:".$red_url."");
+    if($is_new=='1' && get_option('scsl_email_notify')=='1')
+    {
+    scsl_send_reg_email($creds['user_login'],$is_from);    
+    
+    }
+    header("location:".scsl_redirect_url()."");
     exit;
 }    
          
@@ -388,11 +418,16 @@ if($notify_cs)
 {
 
     $red_url=($_COOKIE['lch']=='l' || $_COOKIE['lch']=='')?get_site_url():$_COOKIE['lch'];
+    if($is_new=='1' && get_option('scsl_email_notify')=='1')
+    {
+    scsl_send_reg_email($creds['user_login'],$is_from);    
+    
+    }
     if($is_from=='7' || $is_from=='8' )
     {
         
     
-    header("location:".$red_url."");
+    header("location:".scsl_redirect_url()."");
     
     exit;
 
@@ -400,7 +435,7 @@ if($notify_cs)
     }
     else
     {
-        echo $red_url;
+        echo scsl_redirect_url();
     }
   
  } 
@@ -411,6 +446,137 @@ exit("not notified");
 wp_die(); 
 }
 
+/*wp new login function start*/
+
+function scsl_comment_approved ($approved)
+{
+	
+	if (empty($approved))
+	{
+		if (get_option('scsl_comment_auto_approve')=='1')
+		{
+			$user_id = get_current_user_id ();
+			if (is_numeric ($user_id))
+			{
+				
+					$approved = 1;
+				
+			}
+		}
+	}
+	return $approved;
+}
+add_action ('pre_comment_approved', 'scsl_comment_approved');
+
+
+function scsl_filter_comment_form_defaults ($default_fields)
+{
+    
+	
+	if (get_option('scsl_show_comment')=='1' && get_option('scsl_show_if_members_only')=='1' && is_array ($default_fields) && comments_open () && !is_user_logged_in ())
+	{
+		
+			if (!isset ($default_fields ['must_log_in']))
+			{
+				$default_fields ['must_log_in'] = '';
+			}
+			$default_fields['must_log_in'] .=scsl_get_preview('0');
+		
+	}
+    
+
+	return $default_fields;
+}
+add_filter ('comment_form_defaults', 'scsl_filter_comment_form_defaults');
+
+function scsl_comment_form_login_buttons( $post_id ) {
+    
+	if (get_option('scsl_show_comment')=='1' && get_option('scsl_show_if_members_only')=='0' && comments_open () && !is_user_logged_in ())
+	{
+        echo scsl_get_preview('0');
+	}
+    
+}
+
+add_action( 'comment_form_before', 'scsl_comment_form_login_buttons' );
+
+add_filter ('get_avatar', 'scsl_custom_avatar', 10, 5);
+
+function scsl_custom_avatar( $avatar, $id_or_email, $size, $default, $alt )
+{
+     
+     
+     if(get_option('scsl_use_avtar')=='1')
+     {   
+    $user = false;
+		
+    if ( is_numeric( $id_or_email ) ) {
+			
+        $id = (int) $id_or_email;
+        $user = get_user_by( 'id' , $id );
+			
+        } elseif ( is_object( $id_or_email ) ) {
+			
+            if ( ! empty( $id_or_email->user_id ) ) {
+                $id = (int) $id_or_email->user_id;
+                $user = get_user_by( 'id' , $id );
+            }
+			
+    } else {
+        $user = get_user_by( 'email', $id_or_email );	
+    }
+		
+    if ( $user && is_object( $user ) ) {
+       
+        $csavatar=file_get_contents("https://www.socleversocial.com/dashboard/get_avtars.php?site_id=".get_option('scss_site_id')."&siteUid=".$user->data->ID."");
+        
+			
+        if ($csavatar!='') {
+                
+                $avatar = "<img alt='{$alt}' src='{$csavatar}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
+        }
+			
+    }
+    }
+    return $avatar;
+}
+
+function scsl_redirect_url()
+{
+    $red_url=($_COOKIE['lch']=='l')?get_site_url():$_COOKIE['lch'];    
+    $redirect_to =$red_url;
+		if (get_option('scsl_login_form_redirect')!='')
+		{
+			switch (strtolower(get_option('scsl_login_form_redirect')))
+			{
+				case 'current':
+						$redirect_to =$redirect_to;					
+					break;				
+				case 'dashboard':
+					$redirect_to = admin_url();
+					break;
+				case 'custom':
+					if (strlen(get_option('scsl_login_form_redirect_url')) > 0)
+					{
+						$redirect_to = trim(get_option('scsl_login_form_redirect_url'));
+					}
+					break;
+				default:
+				case 'homepage':
+					$redirect_to = home_url();
+					break;
+			}
+		}
+	
+	
+
+return $redirect_to;
+
+
+}
+
+/*wp new login function end*/
+
 if(get_option('scss_valid_domain')=='1')
 {
  
@@ -418,7 +584,7 @@ if(get_option('scss_valid_domain')=='1')
  
  function scsl_login_head_front()
 {
-    if(!is_user_logged_in() && get_option('comment_registration')=='1' && (is_single() || is_page()) )
+    if(!is_user_logged_in() && get_option('scsl_show_comment')=='1' && (is_single() || is_page()) )
     {
     echo '<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/client_'.get_option('scss_site_id').'_login.js"></script>
 <script type="text/javascript">
@@ -435,7 +601,7 @@ if(get_option('scss_valid_domain')=='1')
 
 function scsl_login_head()
 {
-    if(!is_user_logged_in())
+    if(!is_user_logged_in() && get_option('scsl_show_comment')=='1')
     {
     echo '<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/client_'.get_option('scss_site_id').'_login.js"></script>
 <script type="text/javascript">
@@ -450,45 +616,21 @@ function scsl_login_head()
 
 
 
-add_filter( 'the_content', 'scsl_comment_login_post' ); 
- 
- function scsl_comment_login_post( $content ) {
-   
-   
-    if((is_single() || is_page() ) && !is_user_logged_in() && get_option('comment_registration')=='1')
-    { 
-    $display_content='<div style="clear:both;margin:10px 0px 10px 0px;">';
-    $display_content .='<p>Login with your social profile</p>';
-    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scss_site_id').'.js"></script>'.PHP_EOL;    
-    $js_buttons=scsl_get_preview('0');   
-    $display_content .=$js_buttons;
-    $display_content .='<br/>';
-    $display_content .='</div>';
-    
-    
-        $content .=$display_content;
-		
-	}
-
-    return $content;
-}
-
-add_filter( 'login_form', 'scsl_login_buttons_show' );
+add_action ('sidebar_login_widget_logged_out_content_end', 'scsl_login_buttons_show');
+add_filter( 'login_form', 'scsl_login_buttons_show');
 function scsl_login_buttons_show()
  {
-    if(!is_user_logged_in())
+    if(get_option('scsl_show_comment')=='1' && !is_user_logged_in() && get_option('scsl_show_in_loginform')=='1' )
     {
-    $display_content='<div style="clear:both;margin:10px 0px 10px 0px;">';
-    $display_content='<h3 style="line-height:25px;">Login with your social profile</h3>';
-    $display_content .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scss_site_id').'.js"></script>'.PHP_EOL;    
     $js_buttons=scsl_get_preview('0');   
     $display_content .=$js_buttons;
-    $display_content .='<br/>';
-    $display_content .='<div/>';
     
     echo $display_content;
     }
 }
+
+
+
 }
 
 
@@ -575,26 +717,70 @@ $js_written=file_get_contents('https://www.socleversocial.com/dashboard/wp_write
 
 if(isset($_POST['save_login']) && $_POST['save_login']=='Save' )
 {
+
 update_option('scsl_button_style',sanitize_text_field($_POST['scsl_button_style']));
 update_option('scsl_button_size',sanitize_text_field($_POST['scsl_button_size']));
-update_option('scsl_lending_page',sanitize_text_field($_POST['scsl_lending_page']));
 if(isset($_POST['scsl_network']))
 {
-update_option('scsl_network',sanitize_text_field(implode(",",$_POST['scsl_network'])));
-}    
-}    
+update_option('scsl_network',sanitize_text_field(implode(",",$_POST['scsl_network'])));    
+}
+update_option('scsl_caption',sanitize_text_field($_POST['scsl_caption']));
+update_option('scsl_add_column',sanitize_text_field($_POST['scsl_add_column']));
+update_option('scsl_email_notify',sanitize_text_field($_POST['scsl_email_notify']));
+
+update_option('scsl_use_avtar',sanitize_text_field($_POST['scsl_use_avtar']));
+update_option('scsl_show_comment',sanitize_text_field($_POST['scsl_show_comment']));
+update_option('scsl_comment_auto_approve',sanitize_text_field($_POST['scsl_comment_auto_approve']));
+
+update_option('scsl_show_in_loginform',sanitize_text_field($_POST['scsl_show_in_loginform']));
+update_option('scsl_login_form_redirect',sanitize_text_field($_POST['scsl_login_form_redirect']));
+update_option('scsl_login_form_redirect_url',sanitize_text_field($_POST['scsl_login_form_redirect_url']));
+
+
+update_option('scsl_show_in_regpage',sanitize_text_field($_POST['scsl_show_in_regpage']));
+update_option('scsl_reg_page_redirect',sanitize_text_field($_POST['scsl_reg_page_redirect']));
+update_option('scsl_reg_page_redirect_url',sanitize_text_field($_POST['scsl_reg_page_redirect_url']));
+
+update_option('scsl_show_if_members_only',sanitize_text_field($_POST['scsl_show_if_members_only']));
+
+    
+}   
+ 
+
+function scsl_send_reg_email($username,$is_from)
+{
+    $provider_arr=array("1"=>"Facebook","2"=>"LinkedIN","3"=>"Google+","4"=>"Twitter","5"=>"Yahoo","6"=>"Instagram","7"=>"Paypal","8"=>"Microsoft");
+	//The blogname option is escaped with esc_html on the way into the database
+	$blogname = wp_specialchars_decode (get_option ('blogname'), ENT_QUOTES);
+
+	//Setup Mail Header
+	$recipient = get_bloginfo ('admin_email');
+	$subject = 'Registration using Social Network - '. $blogname.'';
+
+	//Setup Mail Body
+	$body = 'New user registered on your site '.$blogname."\r\n\r\n";
+	$body .= 'Username: '.$username."\r\n\r\n";
+	$body .= 'Social Network: '.$provider_arr[$is_from]."\r\n";
+
+	//Send Mail
+	@wp_mail ($recipient, $subject, $body);
+    
+}
+
 
 function scsl_get_preview($is_preview='0')
 {
+    
     $network=explode(",",get_option('scsl_network'));
     $button_size=get_option('scsl_button_size');
     $btn_style=get_option('scsl_button_style');
+    $caption_text=get_option('scsl_caption');
     
-    $login_buttons=file_get_contents("https://www.socleversocial.com/dashboard/login_buttons.php?site_id=".get_option('scss_site_id')."&bsize=".$button_size."&bstyle=".$btn_style."&is_preview=".$is_preview);
+    $login_buttons=file_get_contents("https://www.socleversocial.com/dashboard/login_buttons.php?site_id=".get_option('scss_site_id')."&bsize=".$button_size."&bstyle=".$btn_style."&is_preview=".$is_preview."&caption=".base64_encode($caption_text)."&frm=l");
     
     return $login_buttons;
+    
 }
-
 
 
 
@@ -638,7 +824,7 @@ if(isset($_POST['submit_share']) && sanitize_text_field($_POST['submit_share'])=
 
 
 function scsshare_html_page() {
- wp_register_style( 'scss-style', plugins_url('scss_css/scss-style.css?ver='.time().'', __FILE__) );
+ wp_register_style( 'scss-style', plugins_url('scss_css/scss_style.css?ver='.time().'', __FILE__) );
  wp_enqueue_style( 'scss-style' );
    
 ?>
@@ -866,34 +1052,169 @@ $float_string="float:right;";
      </div>
      <div class="tabbertab">
 	  <h2>Social Login</h2>
-	  <table class="table" style="margin:20px;font-size:1em;">
+	  
       
-      <tr>
-                    <th align="left">Button Style</th>
+                            <table class="scsl_login_table" style="margin:20px 20px 20px 0px;font-size:1em;width:100%;" cellspacing="3" cellpadding="3">
+                                
+                                
+                    
+                   
+ 
+                    <tr class="heading_row">
+                    <th>General Setting</th>
                     </tr>
-                    <tr>                    
+                    
+                    <tr>
+							<td>
+								<strong>Enter text to be shown on top of social login box. </strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									$scsl_caption =(get_option('scsl_caption')) ? get_option('scsl_caption') : 'Login with:';
+								?>
+								<input type="text" name="scsl_caption" size="79" value="<?php echo htmlspecialchars ($scsl_caption); ?>" />
+							</td>
+						</tr>
+                    
+                    <tr>
+                    <tr>
+							<td>
+								<strong>Please select login button style</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+								<input type="radio" name="scsl_button_style" value="ic" <?php echo (get_option('scsl_button_style') == 'ic' ? 'checked="checked"' : ''); ?> /> <strong>Square Icons</strong><br />
+							<input type="radio" name="scsl_button_style" value="fc" <?php echo (get_option('scsl_button_style') == 'fc' ? 'checked="checked"' : ''); ?> /> <strong>Colored Logos</strong><br />
+                            <input type="radio" name="scsl_button_style" value="fg" <?php echo (get_option('scsl_button_style') == 'fg' ? 'checked="checked"' : ''); ?> /> <strong>Grey Logos</strong>
+							</td>
+						</tr>
+                    
+                    <tr>
+							<td>
+								<strong>Please select Login button size</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							<input type="radio" name="scsl_button_size" value="30" <?php echo (get_option('scsl_button_size') == '30' ? 'checked="checked"' : ''); ?> /> <strong>30px</strong><br />
+							<input type="radio" name="scsl_button_size" value="40" <?php echo (get_option('scsl_button_size') == '40' ? 'checked="checked"' : ''); ?> /> <strong>40px </strong><br />
+                            <input type="radio" name="scsl_button_size" value="50" <?php echo (get_option('scsl_button_size') == '50' ? 'checked="checked"' : ''); ?> /> <strong>50px</strong><br />
+                            <input type="radio" name="scsl_button_size" value="60" <?php echo (get_option('scsl_button_size') == '60' ? 'checked="checked"' : ''); ?> /> <strong>60px</strong><br />
+                            <input type="radio" name="scsl_button_size" value="65" <?php echo (get_option('scsl_button_size') == '65' ? 'checked="checked"' : ''); ?> /> <strong>65px</strong><br />
+							</td>
+						</tr>
+                     <tr>
+							<td>
+								<strong>Do you want to receive an email when new user registers with social network?</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							<input type="radio" name="scsl_email_notify" value="1" <?php echo (get_option('scsl_email_notify') == '1' ? 'checked="checked"' : ''); ?> /> <strong>Yes</strong><br />
+                            <input type="radio" name="scsl_email_notify" value="0" <?php echo (get_option('scsl_email_notify') == '0' ? 'checked="checked"' : ''); ?> /> <strong>No</strong><br />
+							
+							</td>
+						</tr>                
+                        <tr>
+							<td>
+								<strong>If user's social network has avtar then do you want to use it as default avtar?</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							<input type="radio" name="scsl_use_avtar" value="0" <?php echo (get_option('scsl_use_avtar') == '0' ? 'checked="checked"' : ''); ?> /> <strong>No</strong><br />
+                            <input type="radio" name="scsl_use_avtar" value="1" <?php echo (get_option('scsl_use_avtar') == '1' ? 'checked="checked"' : ''); ?> /> <strong>Yes,if user's social network has avtar.</strong><br />
+                            
+							
+							</td>
+						</tr>    
+                    </table> 
+                    <table class="scsl_login_table" style="margin:20px 20px 20px 0px;font-size:1em;width:100%;" cellspacing="3" cellpadding="3">
+                    <tr class="heading_row">
+                    <th>Comment Setting</th>
+                    </tr> 
+                        <tr>
+							<td>
+								<strong>Do you want to show social login box on comment area?</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							<input type="radio" name="scsl_show_comment" value="1" <?php echo (get_option('scsl_show_comment') == '1' ? 'checked="checked"' : ''); ?> /> <strong>Yes</strong><br />
+                            <input type="radio" name="scsl_show_comment" value="0" <?php echo (get_option('scsl_show_comment') == '0' ? 'checked="checked"' : ''); ?> /> <strong>No</strong><br />
+                            
+							
+							</td>
+						</tr> 
+                        
+                        <tr>
+							<td>
+								<strong>Show the Social Login buttons in the comment area if comments are disabled for guests?</strong>
+							</td>
+						</tr>
+						<tr class="row_even">
+							<td>
+								
+								<span>The buttons will be displayed below the "You must be logged in to leave a comment" notice</span><br />
+								<input type="radio" name="scsl_show_if_members_only" value="1" <?php echo (get_option('scsl_show_if_members_only') == 1 ? 'checked="checked"' : ''); ?> /><b>Yes</b><br />
+								<input type="radio" name="scsl_show_if_members_only" value="0" <?php echo (get_option('scsl_show_if_members_only') == 0 ? 'checked="checked"' : ''); ?> /> <b>No</b>
+							</td>
+						</tr>
+					
+                        
+                        
+                        <tr>
+							<td>
+								<b>Do you want to automatically approve comments posted by users who are logged in with social login?</b>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							<input type="radio" name="scsl_comment_auto_approve" value="1" <?php echo (get_option('scsl_comment_auto_approve') == '1' ? 'checked="checked"' : ''); ?> /> <strong>Yes</strong><br />
+                            <input type="radio" name="scsl_comment_auto_approve" value="0" <?php echo (get_option('scsl_comment_auto_approve') == '0' ? 'checked="checked"' : ''); ?> /> <strong>No</strong><br />
+                            
+							
+							</td>
+						</tr>
+                    </table>    
+                    <table class="scsl_login_table" style="margin:20px 20px 20px 0px;font-size:1em;width:100%;" cellspacing="3" cellpadding="3">
+                    <tr class="heading_row">
+                    <th>Login Setting</th>
+                    </tr>
+                    <tr>
+                    <td><b>Do you want show login buttons in login form?</b></td>
+                    </tr>                        
+                    <tr>
                     <td>
-                    <select name="scsl_button_style" id="scsl_button_style">
-                    <option value="ic" <?php if(get_option('scsl_button_style')=='ic') { echo "selected='selected'"; } ?>>Icon</option>
-                    <option value="fc"<?php if(get_option('scsl_button_style')=='fc') { echo "selected='selected'"; } ?>>Full Coloured Logos</option>
-                    <option value="fg" <?php if(get_option('scsl_button_style')=='fg') { echo "selected='selected'"; } ?>>Full Grey Logos</option>
-                    </select>
+                    
+                            <input type="radio" name="scsl_show_in_loginform" value="1" <?php echo (get_option('scsl_show_in_loginform') == '1' ? 'checked="checked"' : ''); ?> /> <strong>Yes</strong><br />
+                            <input type="radio" name="scsl_show_in_loginform" value="0" <?php echo (get_option('scsl_show_in_loginform') == '0' ? 'checked="checked"' : ''); ?> /> <strong>No</strong><br />
+                            
                     </td>
                     </tr>
                     <tr>
-                    <th align="left">Button Size</th>
-                    </tr>
-                    <tr>                    
+                    <td><b>Where user should be redirected after login from login page?</b></td>
+                    </tr>                        
+                    <tr>
                     <td>
-                    <select name="scsl_button_size" id="scsl_button_size">
-                    <option value="30" <?php if(get_option('scsl_button_size')=='30') { echo "selected='selected'"; } ?>>30px</option>
-                    <option value="40" <?php if(get_option('scsl_button_size')=='40') { echo "selected='selected'"; } ?>>40px</option>
-                    <option value="50" <?php if(get_option('scsl_button_size')=='50') { echo "selected='selected'"; } ?>>50px</option>
-                    <option value="60" <?php if(get_option('scsl_button_size')=='60') { echo "selected='selected'"; } ?>>60px</option>
-                    <option value="65" <?php if(get_option('scsl_button_size')=='65') { echo "selected='selected'"; } ?>>65px</option>                    
-                    </select>
+                    
+                                <input type="radio" name="scsl_login_form_redirect" value="current" <?php echo (get_option('scsl_login_form_redirect') == 'current' ? 'checked="checked"' : ''); ?> />Current page<br />
+								<input type="radio" name="scsl_login_form_redirect" value="homepage" <?php echo (get_option('scsl_login_form_redirect') == 'homepage' ? 'checked="checked"' : ''); ?> /> Home Page<br />
+								<input type="radio" name="scsl_login_form_redirect" value="dashboard" <?php echo (get_option('scsl_login_form_redirect') == 'dashboard' ? 'checked="checked"' : ''); ?> />Dashboard<br />
+								<input type="radio" name="scsl_login_form_redirect" value="custom" <?php echo (get_option('scsl_login_form_redirect') == 'custom' ? 'checked="checked"' : ''); ?> /> Following URL:<br />
+								<input type="text" name="scsl_login_form_redirect_url" size="79" value="<?php echo htmlspecialchars (get_option('scsl_login_form_redirect_url')); ?>" />
+                            
                     </td>
-                    </tr>
+                    </tr>                    
                     <tr>
                     <th align="left">Providers</th>
                     </tr>
@@ -911,21 +1232,23 @@ $float_string="float:right;";
                     
                      ?>      
                     </td>
-                    </tr>
-                    
-      
-        <tr>
+                    </tr>                    
+                    <?php if($savedSetting!='0')
+                    {
+                     ?>    
+                    <tr>
                                     <td>
                                         <div class="clearfix">
-                                            <div class="btn-toolbar pull-right">
-                                            
+                                            <div class="btn-toolbar pull-right">                                            
                                                 <input type="submit" name="save_login" class="scssbutton" value="Save" />
                                             </div>
                                         </div>
                                     </td>
-                     </tr>
-                                    
-      </table>
+                      </tr>
+                      <?php } ?>
+                            </table>
+                        
+                        
      </div>
     
 </div>
