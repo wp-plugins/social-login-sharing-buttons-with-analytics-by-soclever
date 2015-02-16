@@ -40,9 +40,6 @@ Allow users to share your pages to famous social networks and get free traffic f
 = Sharing Reports from API =
 We use API provided by social networks to count shares of your website pages. It makes it possible to get accurate history of your page's shares.
 
-= Cookie Data =
-Unlike other FREE sharing buttons SoClever DOES NOT sell your customer cookie data which allows competitors to target your customers/visitors.
- 
 = Track Revenue =
 Have an e-commerce site? Track revenue per social user, download customer segments to personalise your messaging. Segment your customers into groups to help future marketing efforts.
  
