@@ -1785,54 +1785,12 @@ function scsshare_html_page()
 
  wp_enqueue_style( 'scss-style' );
 
- wp_register_style( 'scss-style-fancy', plugins_url('scss_css/jquery.fancybox.css', __FILE__) );
- wp_enqueue_style( 'scss-style-fancy' );
- wp_register_script( 'scss_fancybox', plugins_url('scss_css/jquery.fancybox.js', __FILE__));
- wp_enqueue_script( 'scss_fancybox' );
  
 
 ?>
 
  <script>
- function show_video()
- {
- var jfan=jQuery.noConflict();
-
-
-    var site_url_use="<?php echo admin_url('admin-ajax.php')."?action=scslvideo"; ?>";
-
-	jfan(document).ready(function() {
-
-		jfan.fancybox.open(	{
-
-				'type':'ajax',            
-
-                  'onStart'        : function(){
-
-                   jfan("body").css({"overflow": "hidden", "position": "fixed"});
-
-                    jfan("#fancybox-overlay").css({"overflow": "scroll"});
-
-                     },
-
-                'onClosed'        : function(){
-
-                jfan("body").css({"overflow": "auto", "position": ""});
-
-                  },
-
-			'href' : site_url_use					
-
-		});
-
-	});
-    }
-    
-function closeFB() {
-    
-    var jfan109=jQuery.noConflict();
-    jfan109.fancybox.close(); 
-}
+ 
 
 function show_activate_tab(tab_id)
 {
@@ -2661,9 +2619,11 @@ function show_custom_images()
             
             <div class="r-video">
             	<p>How to Create Facebook App for Website</p>
-                <a href="javascript:void(0);" onclick="show_video();">
-                <img src="<?php echo plugins_url('scss_css/video.png', __FILE__); ?>" alt="How to Create Facebook App for Website"/>
+                <?php add_thickbox(); ?>
+                <a href="<?php echo admin_url('admin-ajax.php')."?action=scslvideo"; ?>?TB_iframe=true&width=600&height=400" class="thickbox">
+                  <img src="<?php echo plugins_url('scss_css/video.png', __FILE__); ?>" alt="How to Create Facebook App for Website"/>       
                 </a>
+            
             </div>
             
             <div class="reviews">
