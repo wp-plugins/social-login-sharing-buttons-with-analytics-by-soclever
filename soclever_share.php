@@ -193,6 +193,23 @@ function scss_uninstall()
 
 	}
 
+add_action('wp_footer', 'scsls_js_footer');
+
+function scsls_js_footer()
+{
+    
+    $footer_js="";
+    if(!get_option('scs_share_ins') && !get_option('scs_login_ins') )
+    {
+   $footer_js='<script type="text/javascript">var sid=\''.get_option('scss_site_id').'\';(function()
+                                                    { var u=((\'https:\'==document.location.protocol)?\'http://\':\'http://\')+\'s3.socleversocial.com/\'; var su=u;var s=document.createElement(\'script\'); s.type=\'text/javascript\'; s.defer=true; s.async=true; s.src=su+\'scs.js\'; var p=document.getElementsByTagName(\'script\')[0]; p.parentNode.insertBefore(s,p); }
+                                                    )();       
+                                           </script>'; 
+   $footer_js .=PHP_EOL;
+   }
+   echo $footer_js;                                        
+}	   
+
 
 function soclever_share_login_setup($links, $file)
 {
