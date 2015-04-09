@@ -8,7 +8,7 @@ Plugin URI: https://www.socleversocial.com/
 
 Description: A simple and easy to use plugin that enables you to add share buttons to all of your posts and/or pages and login buttons for registering or commenting and get detailed report on our Soclever dashbaord.
 
-Version: 1.1.0
+Version: 1.1.2
 
 Author: Soclever Team
 
@@ -1704,10 +1704,10 @@ if(isset($_POST['submit_share']) && sanitize_text_field($_POST['submit_share'])=
 {
 update_option("scss_valid_domain",'0');
 
-$res_ponse_str=file_get_contents('https://www.socleversocial.com/dashboard/wp_activate.php?site_id='.sanitize_text_field($_POST['client_id']).'&api_key='.sanitize_text_field($_POST['api_key']).'&api_secret='.sanitize_text_field($_POST['api_secret']).'');
+$res_ponse_str=file_get_contents('https://www.socleversocial.com/dashboard/wp_activate.php?site_id='.sanitize_text_field($_POST['client_id']).'&api_key='.sanitize_text_field($_POST['api_key']).'&api_secret='.sanitize_text_field($_POST['api_secret']).'&ser=6');
     if(!$res_ponse_str)
     {
-        $res_ponse_str=get_cslcurl('https://www.socleversocial.com/dashboard/wp_activate.php?site_id='.sanitize_text_field($_POST['client_id']).'&api_key='.sanitize_text_field($_POST['api_key']).'&api_secret='.sanitize_text_field($_POST['api_secret']).'');
+        $res_ponse_str=get_cslcurl('https://www.socleversocial.com/dashboard/wp_activate.php?site_id='.sanitize_text_field($_POST['client_id']).'&api_key='.sanitize_text_field($_POST['api_key']).'&api_secret='.sanitize_text_field($_POST['api_secret']).'&ser=6');
     }
     else
     {
