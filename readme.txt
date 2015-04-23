@@ -1,5 +1,5 @@
 ﻿=== Social Login & Sharing buttons with Analytics By SoClever ===
-Contributors: Socleversocial, hemanglashkary
+Contributors: Socleversocial, hemanglashkary, hemang777
 Tags: facebook login, facebook connect, login buttons, social login, twitter login, google+ login, login with facebook, share bar, like bar, share buttons, facebook, whatsapp, twitter, google, linkedin, SoClever, Simple share buttons, share icons, Simple share buttons adder
 Requires at least: 3.0.1
 Tested up to: 4.2
