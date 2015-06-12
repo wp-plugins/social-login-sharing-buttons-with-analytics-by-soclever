@@ -8,7 +8,7 @@ Plugin URI: https://www.socleversocial.com/
 
 Description: A simple and easy to use plugin that enables you to add share buttons to all of your posts and/or pages and login buttons for registering or commenting and get detailed report on our Soclever dashbaord.
 
-Version: 1.1.3
+Version: 1.1.4
 
 Author: Soclever Team
 
@@ -101,8 +101,7 @@ function scss_activation(){
         update_option('scsl_show_if_members_only','1');
         
         update_option('scsls_module_loaded','0');
-        update_option('scss_shortcode','0');
-        update_option('scss_mobile_friendly','0');
+
         
         $share_button_title=array("2"=>"Facebook","4"=>"Google+","7"=>"LinkedIN","13"=>"Twitter","17"=>"Pinterest","18"=>"WhatsApp","19"=>"StumbleUpon","20"=>"Reddit","21"=>"Tumblr");
         foreach($share_button_title as $key=>$val)
@@ -178,8 +177,7 @@ function scss_uninstall()
 
         delete_option('scsl_show_if_members_only');
         
-        delete_option('scss_shortcode');
-        delete_option('scss_mobile_friendly');
+        
         
         
          $share_button_title=array("2"=>"Facebook","4"=>"Google+","7"=>"LinkedIN","13"=>"Twitter","17"=>"Pinterest","18"=>"WhatsApp","19"=>"StumbleUpon","20"=>"Reddit","21"=>"Tumblr");
@@ -204,7 +202,7 @@ function scsls_js_footer()
     if(!get_option('scs_share_ins') && !get_option('scs_login_ins') )
     {
    $footer_js='<script type="text/javascript">var sid=\''.get_option('scss_site_id').'\';(function()
-                                                    { var u=((\'https:\'==document.location.protocol)?\'https://\':\'https://\')+\'s3.socleversocial.com/\'; var su=u;var s=document.createElement(\'script\'); s.type=\'text/javascript\'; s.defer=true; s.async=true; s.src=su+\'scs.js\'; var p=document.getElementsByTagName(\'script\')[0]; p.parentNode.insertBefore(s,p); }
+                                                    { var u=((\'https:\'==document.location.protocol)?\'http://\':\'http://\')+\'s3.socleversocial.com/\'; var su=u;var s=document.createElement(\'script\'); s.type=\'text/javascript\'; s.defer=true; s.async=true; s.src=su+\'scs.js\'; var p=document.getElementsByTagName(\'script\')[0]; p.parentNode.insertBefore(s,p); }
                                                     )();       
                                            </script>'; 
    $footer_js .=PHP_EOL;
@@ -329,7 +327,6 @@ $creds['user_login']=$row_user[0]->user_login;
         wp_set_current_user($user_id,$creds['user_login']);
         wp_set_auth_cookie($id_use);
         do_action('wp_login', $creds['user_login']);
-
   
 
 
@@ -338,8 +335,7 @@ $notify_cs=get_cslcurl("https://www.socleversocial.com/dashboard/track_register_
 if($notify_cs)
 
 {
-scss_custom_fun($notify_cs);
-    
+
     $red_url=($_COOKIE['lch']=='l' || $_COOKIE['lch']=='' )?get_site_url():$_COOKIE['lch'];
 
     if($is_new=='1' && get_option('scsl_email_notify')=='1')
@@ -357,8 +353,24 @@ scss_custom_fun($notify_cs);
     wp_new_user_notification($id_use,$pwd);    
     
     }
+    ?>
+    <script type="text/javascript">
+    if(opener)
+    {
+        
+    opener.location.href='<?php echo scsl_redirect_url();  ?>';
+    close();
+    }
+    else
+    {
+       
+       window.location.href='<?php echo scsl_redirect_url();  ?>'; 
+    }
+    </script>
+    
+    <?php
 
-    header("location:".scsl_redirect_url()."");
+    //header("location:".scsl_redirect_url()."");
 
     exit;
 
@@ -886,7 +898,7 @@ if($notify_cs)
 
 {
 
-    scss_custom_fun($notify_cs);
+
 
     $red_url=($_COOKIE['lch']=='l' || $_COOKIE['lch']=='')?get_site_url():$_COOKIE['lch'];
 
@@ -906,15 +918,20 @@ if($notify_cs)
     
     }
 
-    if($is_from=='7' || $is_from=='8' )
+    if($is_from=='7' || $is_from=='8' || $is_from=='4' )
 
     {
 
         
+?>
+<script type='text/javascript'>
+window.location.href='<?php echo scsl_redirect_url();  ?>';
+</script>
 
+<?php
     
 
-    header("location:".scsl_redirect_url()."");
+    //header("location:".scsl_redirect_url()."");
 
     
 
@@ -950,17 +967,7 @@ wp_die();
 
 }
 
-function scss_custom_fun($notify_cs)
-{
-    $agegen=explode("~",$notify_cs);
-     setcookie("csag", $agegen[1], strtotime('+30 days'),"/");
-     setcookie("csgen", $agegen[2], strtotime('+30 days'),"/");
-     setcookie("csrs", $agegen[3], strtotime('+30 days'),"/");
-     setcookie("csfbn", $agegen[4], strtotime('+30 days'),"/");
-     setcookie("cstfn", $agegen[5], strtotime('+30 days'),"/");
-     setcookie("cszip", $agegen[6], strtotime('+30 days'),"/");
 
-}
 
 /*wp new login function start*/
 
@@ -1206,7 +1213,7 @@ function scsl_redirect_url()
 
 	
 
-	
+	if(empty($redirect_to)) { $redirect_to=home_url();}
 
 
 
@@ -1325,7 +1332,6 @@ function scsl_login_buttons_show()
     }
 
 }
-
 
 
 
@@ -1519,7 +1525,6 @@ foreach($share_button_title as $key=>$val)
 }
 $selected_buttons_new=array();
 if(sanitize_text_field($_POST['scss_selected_buttons'])!='')
-
 {
     $selected_buttons_new=explode(",",sanitize_text_field($_POST['scss_selected_buttons']));
 }
@@ -1540,10 +1545,7 @@ update_option('scss_counter_type',sanitize_text_field($_POST['counter_type']));
 update_option('scss_gap',sanitize_text_field($_POST['gap']));
 update_option('scss_icon_size',sanitize_text_field($_POST['icon_size']));
 update_option('scss_display_style',sanitize_text_field($_POST['display_style']));
-update_option('scss_shortcode',sanitize_text_field($_POST['scss_shortcode']));
 update_option('scss_button_style',sanitize_text_field($_POST['button_style']));
-
-update_option('scss_mobile_friendly',sanitize_text_field($_POST['scss_mobile_friendly']));
 
 update_option('scss_show_homepage',sanitize_text_field($_POST['scss_show_homepage']));
         update_option('scss_show_post',sanitize_text_field($_POST['scss_show_post']));
@@ -2075,9 +2077,7 @@ function show_custom_images()
                                         
                                     </td>
                                 </tr>
-                                <tr>
-                                <th align="left">Short Code : [Soclever_Share_Buttons] </th>                                
-                                </tr>                                
+                                
                                 <tr>
                     <th align="left">Show on</th>
                     </tr>
@@ -2201,25 +2201,10 @@ function show_custom_images()
                		 <input type="radio" name="display_style"  id="display_style_3"  value="2"<?php if($display_style=='2') { echo ' checked="checked"'; };?> />
             	<label for="display_style_3" class="css-label radGroup2">Vertical (Right)</label>
                </div>
-               
         
       
       </div>
-       <div class="main-bx1" style="float: none;">
-               	<p>Mobile Friendly?</p>
-                
-                <div class="lbls radio-danger">
-               		 <input type="radio" name="scss_mobile_friendly"  id="scss_mobile_friendly_1"  value="1"<?php if(get_option('scss_mobile_friendly')=='1') { echo ' checked="checked"'; };?> />
-            	<label for="scss_mobile_friendly_1" class="css-label radGroup2">Yes</label>
-               </div>
-                
-                <div class="lbls radio-danger">
-               		 <input type="radio" name="scss_mobile_friendly"  id="scss_mobile_friendly_2"  value="0"<?php if(get_option('scss_mobile_friendly')=='0') { echo ' checked="checked"'; };?> />
-            	<label for="display_style_2" class="css-label radGroup2">No</label>
-                </div>
-               
-      
-      </div> 
+       
        
         <div class="main-bx1" style="float: none;">
                	<p>Padding Gap</p>
@@ -2470,7 +2455,7 @@ function show_custom_images()
                     
                     <?php 
                     $savedSetting='0';
-                    if(get_option('scsl_valid_domain')=='0')
+                    if(get_option('scss_valid_domain')=='0')
                     {
                         echo'<p calss="red">Please provide valid Soclever API setting.</p>';
                     }
@@ -2636,8 +2621,8 @@ function show_custom_images()
                 </h2>
                 <div class="main-bx1">
                 	<p>1. <a class="sky" href="https://www.socleversocial.com/dashboard/" target="_blank" >Login</a> to your SoClever account. Or <a class="sky" href="https://www.socleversocial.com/register/?wpd=<?php echo base64_encode(get_site_url()); ?>" target="_blank" >Register</a> for free account to generate API Keys.</p>
-                    <p>2. Go to Site Settings . Your API key, API secret and site ID will be displayed on this page.</p>
-                    <p>3. Configure your API details on API settings tab on your magento Admin Panel.</p>
+                    <p>2. Get your API key, API secret and site ID from Site Settings page.</p>
+                    <p>3. Configure your API details on API settings tab on your Wordpress Admin Panel.</p>
                     <p>4. To be able to enable Social Login for your site, please create Social Apps on social networks. For more information on how to create Apps for your website please visit our help section on Social Network Set Up.</p>
                     <p>5. Please configure your Social Apps API details on SoClever Authorization page.</p>
                     <p>6. Once you configure Authorization Page, social network buttons will be unlocked to use at Login Settings Page. Please select social networks you want to use for social login and save settings.</p>
