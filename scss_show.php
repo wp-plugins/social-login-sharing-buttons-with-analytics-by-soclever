@@ -21,19 +21,18 @@ $newUrl = substr_replace($url,"$separator$name=$value",$insertPosition,0);
  return $newUrl;   
 }
 
-function cs_is_mobile()
+function scss_is_mobile()
 {
     $useragent=$_SERVER['HTTP_USER_AGENT'];
     
     return preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4));
 }
 
-function get_cscode($is_shorcode='1')
+
+
+function get_scssharebar($is_shorcode='1')
 {
-    
-  
-        		
-	$content_new = "";
+    $content_new = "";
                 
                 
                 
@@ -46,6 +45,8 @@ function get_cscode($is_shorcode='1')
       $gap=get_option('scss_gap');
       $counter_type=get_option('scss_counter_type');
       $share_button=explode(",",get_option('scss_selected_buttons'));
+      
+      
       
       $js_code ='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/client_'.get_option('scss_site_id').'_share_noautho.js?v='.time().'"></script>'.PHP_EOL.
 '<script>'.PHP_EOL.
@@ -88,189 +89,74 @@ function get_cscode($is_shorcode='1')
                 '.arrow_box { width: '.($iwidth[0]-5).'px; margin-bottom:8px;'.$main_div.' border-radius: 1px; position: relative; background: #fff; border: 1px solid #cccccb; }'.$counter_position.''.PHP_EOL.    
                 '</style>'.PHP_EOL;
     }
-    $main_left="0";
-    
+    $useragent=$_SERVER['HTTP_USER_AGENT'];
     $mobile_Display="display:none;";
-    $is_mobile='0';
     $comon_counter_start='<div class="arrow_box" ><div style="color:#000;font-weight:bold;position: relative;width: 100%;text-align: center;'.$counter_top_margin.'">';
     $comon_counter_start_18='<div class="arrow_box" style="display:none;"><div style="color:#000;font-weight:bold;position: relative;width: 100%;text-align: center;'.$counter_top_margin.'">';
-    if(cs_is_mobile())
+    if(scss_is_mobile())
     {
-        $main_left="0%";
+        
         $is_mobile='1';
-        $iwidth=explode("x","40x40");
         $mobile_Display="display:inline-block;";
+        $iwidth=explode("x","40x40");
         $comon_counter_start_18='<div class="arrow_box"><div style="color:#000;font-weight:bold;position: relative;width: 100%;text-align: center;'.$counter_top_margin.'">';
     }    
-    $share_button_label=array("2"=>"facebook","4"=>"google_plus","7"=>"linkedin","13"=>"twitter","17"=>"pinterest","18"=>"whatsapp","19"=>"stumbleupon","20"=>"reddit");
+    $share_button_label=array("2"=>"facebook","4"=>"google_plus","7"=>"linkedin","13"=>"twitter","17"=>"pinterest","18"=>"whatsapp","19"=>"stumbleupon","20"=>"reddit","21"=>"tumblr");
     
     $src_arr=array();
-    
+    $style_arr=array("1"=>"square/[SCS_MEDIA]_square.png","2"=>"rounded/[SCS_MEDIA]_rounded.png","3"=>"grey/[SCS_MEDIA]_grey.png","4"=>"grey_circle/[SCS_MEDIA]_grey_circle.png","5"=>"flower/[SCS_MEDIA]_flower.png","6"=>"glossy/[SCS_MEDIA]_glossy.png","7"=>"leaf/[SCS_MEDIA]_leaf.png","8"=>"polygon/[SCS_MEDIA]_polygon.png","9"=>"rectangular/[SCS_MEDIA]_rectangular.png","10"=>"rounded_corners/[SCS_MEDIA]_rounded_corners.png","11"=>"waterdrop/[SCS_MEDIA]_waterdrop.png");
     if($button_style=='custom')
     {
         
-             $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_facebook')!=''?get_option('scss_custom_facebook'):plugins_url('scss_css/',__FILE__).'square/facebook_square.png').'"';
-      
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_google_plus')!=''?get_option('scss_custom_google_plus'):plugins_url('scss_css/',__FILE__).'square/google_plus_square.png').'"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.(get_option('scss_custom_linkedin')!=''?get_option('scss_custom_linkedin'):plugins_url('scss_css/',__FILE__).'square/linkedin_square.png').'\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_twitter')!=''?get_option('scss_custom_twitter'):plugins_url('scss_css/',__FILE__).'square/twitter_square.png').'"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_pinterest')!=''?get_option('scss_custom_pinterest'):plugins_url('scss_css/',__FILE__).'square/pinterest_square.png').'"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.(get_option('scss_custom_whatsapp')!=''?get_option('scss_custom_whatsapp'):plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png').'"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_stumbleupon')!=''?get_option('scss_custom_stumbleupon'):plugins_url('scss_css/',__FILE__).'square/stumbleupon_square.png').'"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_reddit')!=''?get_option('scss_custom_reddit'):plugins_url('scss_css/',__FILE__).'square/reddit_square.png').'"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_tumblr')!=''?get_option('scss_custom_tumblr'):plugins_url('scss_css/',__FILE__).'square/tumblr_square.png').'"';  
+            $src_arr[2]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_facebook')!=''?get_option('scss_custom_facebook'):plugins_url('scss_css/',__FILE__).'square/facebook_square.png').'"';      
+            $src_arr[4]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_google_plus')!=''?get_option('scss_custom_google_plus'):plugins_url('scss_css/',__FILE__).'square/google_plus_square.png').'"';
+            $src_arr[7]['custom']='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.(get_option('scss_custom_linkedin')!=''?get_option('scss_custom_linkedin'):plugins_url('scss_css/',__FILE__).'square/linkedin_square.png').'\'';
+            $src_arr[13]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_twitter')!=''?get_option('scss_custom_twitter'):plugins_url('scss_css/',__FILE__).'square/twitter_square.png').'"';
+            $src_arr[17]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_pinterest')!=''?get_option('scss_custom_pinterest'):plugins_url('scss_css/',__FILE__).'square/pinterest_square.png').'"';
+            $src_arr[18]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.(get_option('scss_custom_whatsapp')!=''?get_option('scss_custom_whatsapp'):plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png').'"';
+            $src_arr[19]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_stumbleupon')!=''?get_option('scss_custom_stumbleupon'):plugins_url('scss_css/',__FILE__).'square/stumbleupon_square.png').'"';
+            $src_arr[20]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_reddit')!=''?get_option('scss_custom_reddit'):plugins_url('scss_css/',__FILE__).'square/reddit_square.png').'"';
+            $src_arr[21]['custom']='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.(get_option('scss_custom_tumblr')!=''?get_option('scss_custom_tumblr'):plugins_url('scss_css/',__FILE__).'square/tumblr_square.png').'"';  
     }
     else
     {
-    
-        if($button_style=='1')
+        foreach($share_button_label as $key=>$val)
         {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/facebook_square.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/google_plus_square.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'square/linkedin_square.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/twitter_square.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/pinterest_square.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/stumbleupon_square.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/reddit_square.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'square/tumblr_square.png"';
+            $button_design[$button_style]=$style_arr[$button_style];
+            if($button_style!='1' && $key=='4')
+            {
+              $val=str_replace("_plus","",$val);  
+            }
+            else if($key=='18' && $button_style > 4)
+            {
+                
+                $button_design[$button_style]=$style_arr[1];
+                
+            }
+            $mobile_condition=($key=='18')?$mobile_Display:'';
+            $src_arr[$key][$button_style]='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_condition.'" src="'.plugins_url('scss_css/',__FILE__).''.str_replace('[SCS_MEDIA]',$val,$button_design[$button_style]).'"';
+            
             
         }
-        else if($button_style=='2')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/facebook_rounded.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/google_rounded.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'rounded/linkedin_rounded.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/twitter_rounded.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/pinterest_rounded.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'rounded/whatsapp.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/stumbleupon_rounded.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/reddit_rounded.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded/tumblr_rounded.png"';
-        }
-       else if($button_style=='3')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/facebook_grey.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/google_grey.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'grey/linkedin_grey.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/twitter_grey.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/pinterest_grey.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'grey/whatsapp_grey.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/stumbleupon_grey.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/reddit_grey.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey/tumblr_grey.png"';
-        }
-        else if($button_style=='4')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/facebook_grey_circle.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/google_plus_grey_circle.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'grey_circle/linkedin_grey_circle.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/twitter_grey_circle.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/pinterest_grey_circle.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/whatsapp_grey_circle.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/stumbleupon_grey_circle.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/reddit_grey_circle.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'grey_circle/tumblr_grey_circle.png"';
-        }
-        else if($button_style=='5')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/facebook_flower.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/google_flower.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'flower/linkedin_flower.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/twitter_flower.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/pinterest_flower.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/stumbleupon_flower.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/reddit_flower.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'flower/tumblr_flower.png"';
-        }
-        else if($button_style=='6')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/facebook_glossy.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/google_glossy.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'glossy/linkedin_glossy.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/twitter_glossy.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/pinterest_glossy.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/stumbleupon_glossy.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/reddit_glossy.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'glossy/tumblr_glossy.png"';
-        }
-         else if($button_style=='7')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/facebook_leaf.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/google_leaf.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'leaf/linkedin_leaf.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/twitter_leaf.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/pinterest_leaf.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/stumbleupon_leaf.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/reddit_leaf.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'leaf/tumblr_leaf.png"';
-        }
-         else if($button_style=='8')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/facebook_polygon.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/google_polygon.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'polygon/linkedin_polygon.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/twitter_polygon.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/pinterest_polygon.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/stumbleupon_polygon.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/reddit_polygon.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'polygon/tumblr_polygon.png"';
-        }
-        else if($button_style=='9')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/facebook_rectangular.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/google_rectangular.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'rectangular/linkedin_rectangular.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/twitter_rectangular.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/pinterest_rectangular.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/stumbleupon_rectangular.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/reddit_rectangular.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rectangular/tumblr_rectangular.png"';
-        }
-        else if($button_style=='10')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/facebook_rounded_corners.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/google_rounded_corners.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'rounded_corners/linkedin_rounded_corners.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/twitter_rounded_corners.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/pinterest_rounded_corners.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/stumbleupon_rounded_corners.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/reddit_rounded_corners.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'rounded_corners/tumblr_rounded_corners.png"';
-        }
-        else if($button_style=='11')
-        {
-            $src_style2='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/facebook_waterdrop.png"';
-            $src_style4='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/google_waterdrop.png"';
-            $src_style7='style=\'width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;\' src=\''.plugins_url('scss_css/',__FILE__).'waterdrop/linkedin_waterdrop.png\'';
-            $src_style13='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/twitter_waterdrop.png"';
-            $src_style17='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/pinterest_waterdrop.png"';
-            $src_style18='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;'.$mobile_Display.'" src="'.plugins_url('scss_css/',__FILE__).'square/whatsapp_square.png"';
-            $src_style19='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/stumbleupon_waterdrop.png"';
-            $src_style20='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/reddit_waterdrop.png"';
-            $src_style21='style="width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;cursor:pointer;" src="'.plugins_url('scss_css/',__FILE__).'waterdrop/tumblr_waterdrop.png"';
-        }
+        
         
         }
         
         if($display_style=='1')
         {
-            $gap_string='<span style=\'float:left;width:'.$gap.'px;\'>&nbsp;</span>';
+            $gap_string='<span style=\'float:left;height:'.$gap.'px;\'>&nbsp;</span>';
         }
         else
         {
-            $gap_string='<span style=\'float:left;height:'.$gap.'px;\'>&nbsp;</span>';
+            $gap_string='<span style=\'float:left;width:'.$gap.'px;\'>&nbsp;</span>';
         }
-      if(get_option('scss_mobile_friendly')=='1' && cs_is_mobile())
+        
+         if(get_option('scsss_mobile_friendly')=='1' && scss_is_mobile())
         {
         $gap_string='';
         }
+      
+        
     if($counter_type=='0' || $counter_type=='1')
     {
          
@@ -301,31 +187,85 @@ function get_cscode($is_shorcode='1')
     else
     {
         $count2r=$count4r=$count7r=$count13r=$count17r=$count18r=$count19r=$count20r=$count21r="";
-    }   
+    }
+    
+     
     $user_ID = get_current_user_id();
-    if(get_option('scss_mobile_friendly')=='1' && cs_is_mobile())
+    $picture_url="";
+        $featuredimg = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID));
+        if($featuredimg[0])
+        {
+            $picture_url=$featuredimg[0];
+            
+        }
+        else if($picture_url=="")
+        {
+            
+            if($images = get_posts(array(
+		'post_parent'    => get_the_ID(),
+		'post_type'      => 'attachment',
+		'numberposts'    => -1, // show all
+		'post_status'    => null,
+		'post_mime_type' => 'image',
+                'orderby'        => 'menu_order',
+                'order'           => 'ASC',
+	))) {
+		foreach($images as $image) {
+			$attimg   = wp_get_attachment_image_src($image->ID,false);
+            $picture_url =$attimg[0];            
+            break;
+
+ 
+		}
+	}
+            
+        }
+        
+        if($picture_url=="")
+        {
+           $picture_url=get_option('scsss_default_img'); 
+        }
+        
+        
+    if(get_option('scsss_mobile_friendly')=='1' && scss_is_mobile())
     {
+        
         $ic_div='margin:0px 0px;width:'.$iwidth[0].'px;height:'.$iwidth[0].'px;';
     }
     else
     {
+        
         $ic_div='float:left;';
     }
-       
-    $share_arr[2]='<span style="'.$ic_div.'">'.$count2.'<img '.$src_style2.' onclick="share_on_cs(\'1\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'http://www.facebook.com/sharer.php?u='.urlencode(cs_format_share_url($url,'1')).'&t='.urlencode($title).'\',\'Share on Facebook\',\'500\',\'500\');"  alt="Share on Facebook"  ></span>'.$count2r.''.$gap_string.'';         
-    $share_arr[4]='<span style=\''.$ic_div.'\'>'.$count4.'<img  '.$src_style4.' onclick="share_on_cs(\'3\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'https://plus.google.com/share?url='.urlencode(cs_format_share_url($url,'3')).'&title='.urlencode($title).'\',\'Share on Google Plus\',\'500\',\'500\');"   alt="Share on Google+"></span>'.$count4r.''.$gap_string.'';        
-    $share_arr[7]='<span style=\''.$ic_div.'\'>'.$count7.'<img '.$src_style7.' onclick="share_on_cs(\'2\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'https://www.linkedin.com/cws/share?url='.urlencode(cs_format_share_url($url,'2')).'&title='.urlencode($title).'\',\'Share on LinkedIN\',\'500\',\'500\');" alt="Share on LinkedIN" ></span>'.$count7r.''.$gap_string.'';        
-    $share_arr[13]='<span style=\''.$ic_div.'\'>'.$count13.'<img  '.$src_style13.' onclick="share_on_cs(\'4\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'http://twitter.com/share?url='.urlencode(cs_format_share_url($url,'4')).'&text='.urlencode($title).'\',\'Share on Twitter\',\'500\',\'500\');"  alt="Share on Twitter"></span>'.$count13r.''.$gap_string.'';
-    $share_arr[17]='<span style=\''.$ic_div.'\'>'.$count17.'<img  '.$src_style17.' onclick="share_on_cs(\'5\',\''.sanitize_text_field($user_ID).'\');"   alt="Pin It"></span>'.$count17r.''.$gap_string.'';
-    $share_arr[18]='<span style=\''.$ic_div.'\'>'.$count18.'<img  '.$src_style18.' onclick="share_on_cs(\'6\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on Whatsapp"></span>'.$count18r.''.$gap_string.'';
-    $share_arr[19]='<span style=\''.$ic_div.'\'>'.$count19.'<img  '.$src_style19.' onclick="share_on_cs(\'7\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'http://www.stumbleupon.com/submit?url='.urlencode(cs_format_share_url($url,'7')).'&title='.urlencode($title).'\',\'Share on StumbleUpon\',\'500\',\'500\');"   alt="Share on StumbleUpon"></span>'.$count19r.''.$gap_string.'';
-    $share_arr[20]='<span style=\''.$ic_div.'\'>'.$count20.'<img  '.$src_style20.' onclick="share_on_cs(\'8\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'http://www.reddit.com/submit?url='.urlencode(cs_format_share_url($url,'8')).'&title='.urlencode($title).'\',\'Share on Reddit\',\'500\',\'500\');"   alt="Share on Reddit"></span>'.$count20r.''.$gap_string.'';
-    $share_arr[21]='<span style=\''.$ic_div.'\'>'.$count21.'<img  '.$src_style21.' onclick="share_on_cs(\'9\',\''.sanitize_text_field($user_ID).'\');cspopupCenter(\'http://www.tumblr.com/share/link?url='.urlencode(cs_format_share_url($url,'9')).'&name='.urlencode($title).'&description='.urlencode($csDescription).'\',\'Share on Tumblr\',\'500\',\'500\');"   alt="Share on Tumblr"></span>'.$count21r.''.$gap_string.'';
+    
+     if(get_option('scsss_clientfb_id')!='')
+    {
+        
+       $sharE_url="https://www.facebook.com/dialog/feed?app_id=".get_option('scsss_clientfb_id')."&display=popup&description=&picture=".urlencode($picture_url)."&name=".urlencode($title)."&link=".urlencode(cs_format_share_url($url,'1'))."&redirect_uri=".urlencode(admin_url('admin-ajax.php')."?action=scsfbsharert"); 
+        
+    }
+    else
+    {
+        $sharE_url="https://www.facebook.com/dialog/feed?app_id=379676712196705&display=popup&description=&picture=".urlencode($picture_url)."&name=".urlencode($title)."&link=".urlencode(cs_format_share_url($url,'1'))."&redirect_uri=".urlencode("https://www.socleversocial.com/dashboard/fbsharereturn.php");
+        
+    }
+    
+    $share_arr[2]='<span style="'.$ic_div.'">'.$count2.'<img '.$src_arr[2][$button_style].' onclick="cspopupCenter(\''.$sharE_url.'\',\'Shre on FB\',\'600\',\'400\');share_on_cs(\'1\',\''.sanitize_text_field($user_ID).'\');"  alt="Share on Facebook"  ></span>'.$count2r.''.$gap_string.'';
+    
+             
+    $share_arr[4]='<span style=\''.$ic_div.'\'>'.$count4.'<img  '.$src_arr[4][$button_style].' onclick="cspopupCenter(\'https://plus.google.com/share?url='.urlencode(cs_format_share_url($url,'3')).'&title='.urlencode($title).'\',\'Share on Google Plus\',\'600\',\'400\');share_on_cs(\'3\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on Google+"></span>'.$count4r.''.$gap_string.'';        
+    $share_arr[7]='<span style=\''.$ic_div.'\'>'.$count7.'<img '.$src_arr[7][$button_style].' onclick="cspopupCenter(\'https://www.linkedin.com/cws/share?url='.urlencode(cs_format_share_url($url,'2')).'&title='.urlencode($title).'\',\'Share on LinkedIN\',\'600\',\'400\');share_on_cs(\'2\',\''.sanitize_text_field($user_ID).'\');" alt="Share on LinkedIN" ></span>'.$count7r.''.$gap_string.'';        
+    $share_arr[13]='<span style=\''.$ic_div.'\'>'.$count13.'<img  '.$src_arr[13][$button_style].' onclick="cspopupCenter(\'http://twitter.com/share?url='.urlencode(cs_format_share_url($url,'4')).'&text='.urlencode($title).'\',\'Share on Twitter\',\'600\',\'400\');share_on_cs(\'4\',\''.sanitize_text_field($user_ID).'\');"  alt="Share on Twitter"></span>'.$count13r.''.$gap_string.'';
+    $share_arr[17]='<span style=\''.$ic_div.'\'>'.$count17.'<img  '.$src_arr[17][$button_style].' onclick="share_on_cs(\'5\',\''.sanitize_text_field($user_ID).'\');"   alt="Pin It"></span>'.$count17r.''.$gap_string.'';
+    $share_arr[18]='<span style=\''.$ic_div.'\'>'.$count18.'<img  '.$src_arr[18][$button_style].' onclick="share_on_cs(\'6\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on Whatsapp"></span>'.$count18r.''.$gap_string.'';
+    $share_arr[19]='<span style=\''.$ic_div.'\'>'.$count19.'<img  '.$src_arr[19][$button_style].' onclick="cspopupCenter(\'http://www.stumbleupon.com/submit?url='.urlencode(cs_format_share_url($url,'7')).'&title='.urlencode($title).'\',\'Share on StumbleUpon\',\'600\',\'400\');share_on_cs(\'7\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on StumbleUpon"></span>'.$count19r.''.$gap_string.'';
+    $share_arr[20]='<span style=\''.$ic_div.'\'>'.$count20.'<img  '.$src_arr[20][$button_style].' onclick="cspopupCenter(\'http://www.reddit.com/submit?url='.urlencode(cs_format_share_url($url,'8')).'&title='.urlencode($title).'\',\'Share on Reddit\',\'600\',\'400\');share_on_cs(\'8\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on Reddit"></span>'.$count20r.''.$gap_string.'';
+    $share_arr[21]='<span style=\''.$ic_div.'\'>'.$count21.'<img  '.$src_arr[21][$button_style].' onclick="cspopupCenter(\'http://www.tumblr.com/share/link?url='.urlencode(cs_format_share_url($url,'9')).'&name='.urlencode($title).'&description='.urlencode($csDescription).'\',\'Share on Tumblr\',\'600\',\'400\');share_on_cs(\'9\',\''.sanitize_text_field($user_ID).'\');"   alt="Share on Tumblr"></span>'.$count21r.''.$gap_string.'';
     
     
     $start_div='<div id="scssdiv" style="clear:both;wdth:100%;height:100%;display:inline-block;z-index:999;">';
     $end_div='</div>';
-if(($display_style=='1' || $display_style=='2') && $is_shorcode=='0')
+if(($display_style=='1' || $display_style=='2') && $is_shorcode=='0' )
 {
     
     $left_right=($display_style=='2')?'right:0;':'left:0;';
@@ -334,9 +274,10 @@ if(($display_style=='1' || $display_style=='2') && $is_shorcode=='0')
     $start_div='<div id="scssdiv" style="width:'.intval(($iwidth[0]*$multiplier_div)+$add_extra).'px;position:fixed;top:30%;'.$left_right.'display:inline-block;height:100%;z-index:999;">';
     $end_div='</div>';
 }
-if(get_option('scss_mobile_friendly')=='1' && cs_is_mobile())
+
+if(get_option('scsss_mobile_friendly')=='1' && scss_is_mobile())
 {
-    $start_div='<div id="scssdiv" style="width: 90%;position:fixed;bottom:0;height: 40px; background-color:transparent;
+    $start_div='<div id="scssdiv" style="width: 90%;position:fixed;left:10%;bottom:1%;height: 40px; background-color:transparent;
     
   
      /* align horizontal */
@@ -346,7 +287,20 @@ if(get_option('scss_mobile_friendly')=='1' && cs_is_mobile())
  /* align vertical */">';
 }
 
-    
+
+
+    $js_code .='<script>
+        if(typeof cspopupCenter !=\'function\')
+        {
+         function cspopupCenter(url, title, w, h) {
+            
+  var left = (screen.width/2)-(w/2);
+  var top = (screen.height/2)-(h/2);
+  return window.open(url, title, \'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=\'+w+\', height=\'+h+\', top=\'+top+\', left=\'+left);
+}
+}
+</script>
+'.PHP_EOL;
     $js_code .=    PHP_EOL;
     $js_code .=$start_div;
         foreach($share_button as $key=>$val)
@@ -355,29 +309,26 @@ if(get_option('scss_mobile_friendly')=='1' && cs_is_mobile())
                $js_code .=$share_arr[$val];
         }
         $js_code .=$end_div;
-        $js_code .=    PHP_EOL;
-        $js_code .='<script>
-         function cspopupCenter(url, title, w, h) {
-            
-  var left = (screen.width/2)-(w/2);
-  var top = (screen.height/2)-(h/2);
-  return window.open(url, title, \'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=\'+w+\', height=\'+h+\', top=\'+top+\', left=\'+left);
-}
-</script>
-'.PHP_EOL;
-        return $js_code;
-
+        if(get_option('scsss_mobile_friendly')=='1' && scss_is_mobile())
+        {
+            $js_code .='<style>#scssdiv span { margin-right:15px !important;}</style>';
+        }
+        return $js_code;   
+    
+    
+    
 }
 
 }
+
 function scsss_display($content)
 {
-    $content_new="";
-    $sscc_share_content_position=get_option('scss_display_position'); 
-   $myjs_code=get_cscode('0');
+    
       
-      
-$show_content=0;
+   $sscc_share_content_position=get_option('scss_display_position');
+     $myjs_code=get_scssharebar('0');   		
+	
+    $show_content=0;
 	if($show_content=='0' && (!is_home()  && is_page() && get_option('scss_show_page') == '1') )
     {
         $show_content=1;
@@ -402,16 +353,19 @@ $show_content=0;
     
 	 //var_dump((is_category() && get_option('scss_show_category') == '1')."==".(is_archive() && get_option('scss_show_category') == '1')."==".( is_home() && get_option('scss_show_homepage') == '1'));
      
-   
-     if ($show_content=='1' && !cs_is_mobile() || get_option('scss_mobile_friendly')=='0')
+
+     if($show_content=='1')
       {
         
-        
-     
-
-        
-        
-        
+if(scss_is_mobile() && get_option('scsss_mobile_friendly'))
+        {
+            
+            return $myjs_code;
+           
+        }       
+        else
+        {
+               
         if($sscc_share_content_position=='top')
 					{
 						$content_new .=$myjs_code;
@@ -432,6 +386,10 @@ $show_content=0;
 					}
                     return $content_new;
      
+        
+        
+        
+         }
         }
         else
         {
@@ -439,16 +397,15 @@ $show_content=0;
             return $content;
         }
         
-        
-         
-        
      }
      	
 		
 	
 
 
-add_shortcode('Soclever_Share_Buttons', 'get_cscode'); 
+if(get_option('scs_sharebar_enable')=='1')
+{
+add_shortcode('Soclever_Share_Buttons','get_scssharebar');
     
 add_filter('the_content', 'scsss_display');
 
@@ -458,6 +415,5 @@ if(get_option('scss_show_excerpts')=='1')
 		
 		add_filter( 'the_excerpt', 'scsss_display');
 }
-
-
+}
 ?>

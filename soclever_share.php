@@ -8,7 +8,7 @@ Plugin URI: https://www.socleversocial.com/
 
 Description: A simple and easy to use plugin that enables you to add share buttons to all of your posts and/or pages and login buttons for registering or commenting and get detailed report on our Soclever dashbaord.
 
-Version: 1.1.4
+Version: 1.2.0
 
 Author: Soclever Team
 
@@ -71,6 +71,7 @@ function scss_activation(){
         update_option('scss_domain',''); 
 
         update_option('scsl_network','');
+        update_option('scsss_mobile_friendly','0');
 
         update_option('scsl_button_style','ic');
 
@@ -83,6 +84,8 @@ function scss_activation(){
         update_option('scsl_use_avtar','0');
 
         update_option('scsl_show_comment','0');
+        update_option('scsss_clientfb_id','');
+        update_option('scsss_default_img','');
 
         update_option('scsl_comment_auto_approve','0');
 
@@ -101,6 +104,17 @@ function scss_activation(){
         update_option('scsl_show_if_members_only','1');
         
         update_option('scsls_module_loaded','0');
+        update_option('scs_sharebar_enable','1');
+        
+        update_option('customlogin_fb','');
+        update_option('customlogin_gp','');
+        update_option('customlogin_tw','');
+        update_option('customlogin_li','');
+        update_option('customlogin_yh','');
+        update_option('customlogin_ms','');
+        update_option('customlogin_pp','');
+        update_option('customlogin_ig','');
+        
 
         
         $share_button_title=array("2"=>"Facebook","4"=>"Google+","7"=>"LinkedIN","13"=>"Twitter","17"=>"Pinterest","18"=>"WhatsApp","19"=>"StumbleUpon","20"=>"Reddit","21"=>"Tumblr");
@@ -156,6 +170,9 @@ function scss_uninstall()
         delete_option('scsl_add_column');
 
         delete_option('scsl_email_notify');
+        delete_option('scsss_default_img');
+        delete_option('scsss_clientfb_id');
+        
 
         delete_option('scsl_use_avtar');
 
@@ -170,6 +187,7 @@ function scss_uninstall()
         delete_option('scsl_login_form_redirect_url');
 
         delete_option('scsl_show_in_regpage');
+        delete_option('scsss_mobile_friendly');
 
         delete_option('scsl_reg_page_redirect');
 
@@ -177,6 +195,17 @@ function scss_uninstall()
 
         delete_option('scsl_show_if_members_only');
         
+        delete_option('scs_sharebar_enable');
+        
+        
+        delete_option('customlogin_fb');
+        delete_option('customlogin_gp');
+        delete_option('customlogin_tw');
+        delete_option('customlogin_li');
+        delete_option('customlogin_yh');
+        delete_option('customlogin_ms');
+        delete_option('customlogin_pp');
+        delete_option('customlogin_ig');
         
         
         
@@ -353,26 +382,57 @@ if($notify_cs)
     wp_new_user_notification($id_use,$pwd);    
     
     }
-    ?>
-    <script type="text/javascript">
-    if(opener)
+    
+    $isIosChrome = (strpos($_SERVER['HTTP_USER_AGENT'], 'CriOS') !== false) ? true : false;
+    if(isset($_GET['lch']))
+    {
+        $lch=$_GET['lch'];
+    }
+    else if($_COOKIE['lch'])
+    {
+        $lch=$_COOKIE['lch'];
+    }
+    
+    
+    $ic='0';
+    if(isset($_GET['ic']))
+    {
+        $ic=$_GET['ic'];
+    }
+    else if($_COOKIE['ic'])
+    {
+        $ic=$_COOKIE['ic'];
+    }
+    
+    
+    if(!$isIosChrome)
     {
         
-    opener.location.href='<?php echo scsl_redirect_url();  ?>';
-    close();
-    }
-    else
-    {
-       
-       window.location.href='<?php echo scsl_redirect_url();  ?>'; 
-    }
-    </script>
     
-    <?php
-
-    //header("location:".scsl_redirect_url()."");
-
-    exit;
+    //$red_url=($_COOKIE['lch']=='l')?get_site_url():$_COOKIE['lch'];
+     ?>
+     <script type="text/javascript">
+     if(opener)
+     {
+     opener.location.href='<?php echo scsl_redirect_url($lch,$ic); ?>';
+     close();
+     }
+     else
+     {
+        window.location.href='<?php echo scsl_redirect_url($lch,$ic); ?>';
+     }
+     </script>
+     <?php
+     }
+     else
+     {
+     ?>
+     <script type="text/javascript">
+     window.location.href='<?php echo scsl_redirect_url($_GET['lch'],$_GET['ic']); ?>';
+     </script>
+     <?php   
+     }
+     exit;
 
 }    
 
@@ -389,18 +449,17 @@ function socleverlogin_plugin_parse_request($wp) {
     global $wpdb;
 
     
-
-    $lch=sanitize_text_field($_GET['lch']);    
-
-  if(isset($lch) && $lch!='')
-
+    if(isset($_GET['lch']) && $_GET['lch']!='')
 {
+    setcookie('lch',$_GET['lch'],time()+100,'/');
 
-    setcookie('lch',$lch,time()+100,'/');
+} 
+if(isset($_GET['ic']) && $_GET['ic']!='')
+{
+    setcookie('ic',$_GET['ic'],time()+100,'/');
 
+} 
 
-
-}
 
 
 
@@ -623,17 +682,16 @@ function scsl_login_fb()
 
     global $wpdb;
 
-  $lch=sanitize_text_field($_GET['lch']);
-
-  if(isset($lch) && $lch!='')
-
+  if(isset($_GET['lch']) && $_GET['lch']!='')
 {
-
-    setcookie('lch',$lch,time()+100,'/');
-
-
+    setcookie('lch',$_GET['lch'],time()+100,'/');
 
 } 
+ if(isset($_GET['ic']))
+{
+    setcookie('ic',$_GET['ic'],time()+100,'/');
+
+}
 
    $get_fb=get_cslcurl("https://www.socleversocial.com/dashboard/get_fb_data.php?siteid=".get_option('scss_site_id')."");
 
@@ -675,7 +733,7 @@ function scsl_login_fb()
 
         $dialog_url = "http://www.facebook.com/dialog/oauth?client_id=" 
 
-            . $app_id . "&redirect_uri=" . urlencode($my_url)."&scope=email,user_birthday,user_relationships,user_location,user_hometown,user_friends,user_likes";
+            . $app_id . "&redirect_uri=" . urlencode($my_url)."&scope=email,user_birthday,user_relationships,user_location,user_hometown,user_friends,user_likes&display=popup";
 
 
 
@@ -797,19 +855,43 @@ function scsl_login(){
 
   global $wpdb;
 
-  $lch=sanitize_text_field($_GET['lch']);
-
-  if(isset($lch) && $lch!='')
-
+  if(isset($_GET['lch']) && $_GET['lch']!='')
 {
-
-    setcookie('lch',$lch,time()+100,'/');
-
-
+    setcookie('lch',$_GET['lch'],time()+100,'/');
 
 } 
 
-   
+if(isset($_POST['lch']))
+    {
+        $lch=$_POST['lch'];
+        
+    }
+    else if(isset($_GET['lch']))
+    {
+        
+        $lch=$_GET['lch'];
+    }
+    else
+    {
+        $lch="";
+    }
+    
+
+if(isset($_POST['ic']))
+    {
+        $ic=$_POST['ic'];
+        
+    }
+    else if(isset($_GET['ic']))
+    {
+        
+        $ic=$_GET['ic'];
+    }
+    else
+    {
+        $ic="";
+    }
+
 
   $email=(isset($_GET['email']))?sanitize_text_field($_GET['email']):sanitize_text_field($_POST['email']);
 
@@ -917,15 +999,18 @@ if($notify_cs)
     wp_new_user_notification($id_use,$pwd);    
     
     }
-
-    if($is_from=='7' || $is_from=='8' || $is_from=='4' )
-
+    
+    if($is_from=='3' ||$is_from=='2' )
     {
+      
+        exit(scsl_redirect_url($lch,$ic));
+    }
+    
 
         
 ?>
 <script type='text/javascript'>
-window.location.href='<?php echo scsl_redirect_url();  ?>';
+window.location.href='<?php echo scsl_redirect_url($lch,$ic);  ?>';
 </script>
 
 <?php
@@ -935,21 +1020,7 @@ window.location.href='<?php echo scsl_redirect_url();  ?>';
 
     
 
-    exit;
-
-
-
-     
-
-    }
-
-    else
-
-    {
-
-        echo scsl_redirect_url();
-
-    }
+    
 
   
 
@@ -1037,7 +1108,7 @@ function scsl_filter_comment_form_defaults ($default_fields)
 
 			}
 
-			$default_fields['must_log_in'] .=scsl_get_preview('0');
+			$default_fields['must_log_in'] .=scsl_get_preview('0','1');
 
 		
 
@@ -1063,7 +1134,7 @@ function scsl_comment_form_login_buttons( $post_id ) {
 
 	{
 
-        echo scsl_get_preview('0');
+        echo scsl_get_preview('0','1');
 
 	}
 
@@ -1163,7 +1234,7 @@ function scsl_redirect_url()
 
 {
 
-    $red_url=($_COOKIE['lch']=='l')?get_site_url():$_COOKIE['lch'];    
+    $red_url=($_COOKIE['lch']=='l')?admin_url():$_COOKIE['lch'];    
 
     $redirect_to =$red_url;
 
@@ -1177,7 +1248,11 @@ function scsl_redirect_url()
 
 				case 'current':
 
-						$redirect_to =$redirect_to;					
+						if(strtolower($lch)=='l')
+                        {
+                            $lch=admin_url();
+                        }
+						$redirect_to =($lch!='')?$lch:scsl_login_get_current_url();					
 
 					break;				
 
@@ -1213,16 +1288,29 @@ function scsl_redirect_url()
 
 	
 
-	if(empty($redirect_to)) { $redirect_to=home_url();}
+	if($ic=='1')
+{
+    $redirect_to=$lch;
+}
+	
+if(empty($redirect_to))
+{
+    $redirect_to = home_url ();
+}
+
+
+return rawurldecode($redirect_to);
 
 
 
-return $redirect_to;
 
 
+}
 
-
-
+function scsl_login_get_current_url ()
+{
+	$red_url=($_COOKIE['lch']=='l')?admin_url():$_COOKIE['lch'];
+    return $red_url;
 }
 
 
@@ -1321,7 +1409,7 @@ function scsl_login_buttons_show()
 
     {
 
-    $js_buttons=scsl_get_preview('0');   
+    $js_buttons=scsl_get_preview('0','0');   
 
     $display_content .=$js_buttons;
 
@@ -1553,10 +1641,16 @@ update_option('scss_show_homepage',sanitize_text_field($_POST['scss_show_homepag
         update_option('scss_show_category',sanitize_text_field($_POST['scss_show_category']));
         update_option('scss_show_excerpts',sanitize_text_field($_POST['scss_show_excerpts']));
 
-
+update_option('scsss_mobile_friendly',sanitize_text_field($_POST['scsss_mobile_friendly']));
 update_option('scss_share_autho','1');
 
+update_option('scs_sharebar_enable',sanitize_text_field($_POST['enable_scsshare']));
+update_option('scsss_default_img',sanitize_text_field($_POST['scsss_default_img']));
+update_option('scsss_clientfb_id',sanitize_text_field($_POST['scsss_clientfb_id']));
 
+
+
+        
 
 $js_written=get_cslcurl('https://www.socleversocial.com/dashboard/wp_write_noauthosharejs.php?site_id='.sanitize_text_field(get_option('scss_site_id')).'&save=Save&autho_share=1');
 
@@ -1638,11 +1732,29 @@ update_option('scsl_show_if_members_only',sanitize_text_field($_POST['scsl_show_
 
 
 
-    
+    update_option('customlogin_fb',sanitize_text_field($_POST['customlogin_fb']));
+update_option('customlogin_gp',sanitize_text_field($_POST['customlogin_gp']));
+update_option('customlogin_li',sanitize_text_field($_POST['customlogin_li']));
+update_option('customlogin_tw',sanitize_text_field($_POST['customlogin_tw']));
+update_option('customlogin_yh',sanitize_text_field($_POST['customlogin_yh']));
+update_option('customlogin_ms',sanitize_text_field($_POST['customlogin_ms']));
+update_option('customlogin_ig',sanitize_text_field($_POST['customlogin_ig']));
+update_option('customlogin_pp',sanitize_text_field($_POST['customlogin_pp']));    
+
 
 }   
 
  
+function scsl_redirect(){
+    $redirect_url = $_SERVER['HTTP_REFERER'];
+    if(!empty($_REQUEST['redirect_to'])){
+        wp_safe_redirect($_REQUEST['redirect_to']);
+    } else {
+        wp_redirect($redirect_url);
+    }
+    exit();
+}
+add_filter('wp_logout','scsl_redirect');
 
 
 
@@ -1688,7 +1800,7 @@ function scsl_send_reg_email($username,$is_from)
 
 
 
-function scsl_get_preview($is_preview='0')
+function scsl_get_preview($is_preview='0',$is_comment)
 
 {
 
@@ -1702,15 +1814,144 @@ function scsl_get_preview($is_preview='0')
 
     $caption_text=get_option('scsl_caption');
 
-    
 
-    $login_buttons=get_cslcurl("https://www.socleversocial.com/dashboard/login_buttons.php?site_id=".get_option('scss_site_id')."&bsize=".$button_size."&bstyle=".$btn_style."&is_preview=".$is_preview."&caption=".base64_encode($caption_text)."&frm=l");
+    if(strtolower($btn_style)=='custom')
+    {
+      
+      $fbpath=get_option('customlogin_fb');
+      $gppath=get_option('customlogin_gp');
+      $twpath=get_option('customlogin_tw');
+      $lipath=get_option('customlogin_li');
+      $yhpath=get_option('customlogin_yh');
+      $mspath=get_option('customlogin_ms');
+      $igpath=get_option('customlogin_ig');
+      $pppath=get_option('customlogin_pp');
+      
+      $previewDiv='';
+        $fb_div="";
+        if(in_array('2',$network) && !empty($fbpath))
+        {
+            
+            $fb_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$fbpath.'" alt="Login with Facebook" title="Login with Facebook"></div>';
+            $previewDiv .=$imgdiv;
+            $fb_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'facebook\',\''.$is_comment.'\']);'.PHP_EOL;
+            $fb_div .='csbutton.putCsbutton();         
+                      </script>';
+        
+            
+        }
+        $gp_div="";
+        if(in_array('4',$network) && !empty($gppath))
+        {
+            $gapi=get_cslcurl('https://www.socleversocial.com/dashboard/get_fb_data.php?action=gapi&siteid='.get_option('scs_site_id').'');
+            
+            $gp_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$gppath.'" alt="Login with Google+" title="Login with Google+"></div>';
+            $previewDiv .=$imgdiv;
+            $gp_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\''.$gapi.'\',\''.$is_comment.'\']);'.PHP_EOL;
+            $gp_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $li_div="";
+        if(in_array('7',$network) && !empty($lipath))
+        {
+            
+            $li_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$lipath.'" alt="Login with LinkedIN" title="Login with LinkedIN"></div>';
+            $li_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'li\',\''.$is_comment.'\']);'.PHP_EOL;
+            $li_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $tw_div="";
+        if(in_array('13',$network) && !empty($twpath))
+        {
+            
+            $tw_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$twpath.'" alt="Login with Twitter" title="Login with Twitter"></div>';
+            $previewDiv .=$imgdiv;
+            $tw_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'twitter\',\''.$is_comment.'\']);'.PHP_EOL;
+            $tw_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $yh_div="";
+        if(in_array('15',$network) && !empty($yhpath))
+        {
+            
+            $yh_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$yhpath.'" alt="Login with Yahoo!" title="Login with Yahoo!"></div>';
+            $previewDiv .=$imgdiv;
+            $yh_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'yahoo\',\''.$is_comment.'\']);'.PHP_EOL;
+            $yh_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $ms_div="";
+        if(in_array('8',$network) && !empty($mspath))
+        {
+             
+            $ms_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$mspath.'" alt="Login with Microsoft" title="Login with Microsoft"></div>';
+            $previewDiv .=$imgdiv;
+            $ms_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'microsoft\',\''.$is_comment.'\']);'.PHP_EOL;
+            $ms_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $pp_div="";
+        if(in_array('16',$network) && !empty($pppath))
+        {
+             
+            $pp_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$pppath.'" alt="Login with PayPal" title="Login with PayPal"></div>';
+            $previewDiv .=$imgdiv;
+            $pp_div .='csbutton.init([\''.$imgdiv.'\',\'100%\' ,\'100%\',\'login\',\'paypal\',\''.$is_comment.'\']);'.PHP_EOL;
+            $pp_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+        $ig_div="";
+        if(in_array('5',$network) && !empty($igpath))
+        {
+            
+            $ig_div .='<script type="text/javascript">';
+            $imgdiv='<div style="display:inline-block;width: 100%; height:100%;"><img src="'.$igpath.'" alt="Login with Instagram" title="Login with Instagram"></div>';
+            $previewDiv .=$imgdiv;
+            $ig_div .='csbutton.init([\''.$imgdiv.'\',\''.$btn_width.'px\' ,\''.$button_size.'px\',\'login\',\'instagram\',\''.$is_comment.'\']);'.PHP_EOL;
+            $ig_div .='csbutton.putCsbutton();         
+                      </script>';
+          
+        }
+
+        
+        $login_plugin_start=$login_plugin_end="";
+        if($is_preview=='1')
+        {
+            return $previewDiv;
+        }
+        else
+        {
+            
+                $login_plugin_start .='<div style="clear:both;margin:10px 0px 10px 0px;">'.PHP_EOL.'<h3 style="line-height:25px;">'.$caption_text.'</h3>'.PHP_EOL;
+                $login_plugin_start .='<script type="text/javascript" src="https://www.socleversocial.com/dashboard/client_share_js/csloginbuttons_'.get_option('scsl_site_id').'.js"></script>'.PHP_EOL;
+                $login_plugin_end .='<br/><input type="hidden" id="scsl_is_comment" value="'.$is_comment.'"></div>';
+            
+                return $login_plugin_start.PHP_EOL.$fb_div.PHP_EOL.$gp_div.PHP_EOL.$li_div.PHP_EOL.$tw_div.PHP_EOL.$yh_div.PHP_EOL.$ms_div.PHP_EOL.$pp_div.PHP_EOL.$ig_div.$login_plugin_end;
+        }
+        }
+        else
+        {
+
+    $login_buttons=get_cslcurl("https://www.socleversocial.com/dashboard/login_buttons.php?site_id=".get_option('scss_site_id')."&bsize=".$button_size."&bstyle=".$btn_style."&is_preview=".$is_preview."&caption=".base64_encode($caption_text)."&frm=l&is_comment=".$is_comment."");
 
     
 
     return $login_buttons;
 
-    
+    }
 
 }
 
@@ -1853,7 +2094,8 @@ function show_sub_activate(tab_id)
 {
     for(var i=3;i<=6;i++)
     {
-        
+        if(i!='5')
+        {
         if(i==tab_id)
         {
             document.getElementById("tabli"+tab_id).className="active";
@@ -1865,6 +2107,7 @@ function show_sub_activate(tab_id)
         {
             document.getElementById("tabli"+i).className="";
             document.getElementById("tab"+i).style.display="none";
+        }
         }
     }
 }
@@ -2022,10 +2265,10 @@ function show_custom_images()
 <div style="clear: both;">&nbsp;&nbsp;</div>
 <nav>
 <ul>
-                	<li id="tabli3" class="active" style="width:20%;"><a href="javascript:void(0);" onclick="show_sub_activate('3');">Sharing</a></li>
-                    <li id="tabli4"  style="width:20%;"><a href="javascript:void(0);" onclick="show_sub_activate('4');">Share Bar</a></li>
-                    <li  id="tabli5" style="width:20%;"><a href="javascript:void(0);" onclick="show_sub_activate('5');">Share Counter</a></li>
-                    <li  id="tabli6" style="width:30%;"><a href="javascript:void(0);" onclick="show_sub_activate('6');">Social Login Setting</a></li>                    
+                	<li id="tabli3" class="active" style="width:30%;"><a href="javascript:void(0);" onclick="show_sub_activate('3');">Share Bar Settings</a></li>
+                    <li id="tabli4"  style="width:30%;"><a href="javascript:void(0);" onclick="show_sub_activate('4');">Share Bar Appearance</a></li>
+                    <!--li  id="tabli5" style="width:20%;"><a href="javascript:void(0);" onclick="show_sub_activate('5');">Share Counter</a></li-->
+                    <li  id="tabli6" style="width:40%;"><a href="javascript:void(0);" onclick="show_sub_activate('6');">Social Login Setting</a></li>                    
                 </ul>
 </nav>                
 
@@ -2040,10 +2283,30 @@ function show_custom_images()
 	  
 
       <table class="table" style="margin:20px;font-size:1em;">
+      <tr>
+      <td>
+       <div class="main-bx1" style="float: none;">
+               	<p><strong>Enable Share Bar</strong></p>
+                
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="enable_scsshare"  id="enable_scsshare_1" value="1"<?php if(get_option('scs_sharebar_enable')=='1') { echo ' checked="checked"'; };?> />
+            	<label for="enable_scsshare_1" class="css-label radGroup2">Yes</label>
+                </div>
+                
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="enable_scsshare"  id="enable_scsshare_2" value="0"<?php if(get_option('scs_sharebar_enable')=='0') { echo ' checked="checked"'; };?> />
+            	<label for="enable_scsshare_2" class="css-label radGroup2">No</label>
+                </div>
+                
+
+                
+      
+      </td>
+      </tr>
 	  <tr>
       <td>
       <div class="main-bx1">
-               	<label>Select Networks</label>
+               	<label><strong>Select Networks</strong></label>
                 </div>
       </td>
       </tr>
@@ -2077,9 +2340,11 @@ function show_custom_images()
                                         
                                     </td>
                                 </tr>
+
+
                                 
                                 <tr>
-                    <th align="left">Show on</th>
+                    <th align="left">Show share bar on following pages</th>
                     </tr>
                     <tr>                    
                     <td>
@@ -2102,7 +2367,84 @@ function show_custom_images()
                     <option value="both" <?php if(get_option('scss_display_position')=='both') { echo "selected='selected'"; } ?>>Both</option>
                     </select>
                     </td>
-                    </tr>      
+                    </tr> 
+                    
+                    <tr>
+                    <th align="left">Mobile Friendly</th>
+                    </tr>
+                    <tr>                    
+                    <td>
+                    <div class="lbls radio-danger">
+               		 <input type="radio" name="scsss_mobile_friendly"  id="scsss_mobile_friendly_1" value="1"<?php if(get_option('scsss_mobile_friendly')=='1') { echo ' checked="checked"'; };?> />
+            	<label for="scsss_mobile_friendly_1" class="css-label radGroup2">Yes</label>
+                </div>
+                
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="scsss_mobile_friendly"  id="scsss_mobile_friendly_2" value="0"<?php if(get_option('scsss_mobile_friendly')=='0') { echo ' checked="checked"'; };?> />
+            	<label for="scsss_mobile_friendly_2" class="css-label radGroup2">No</label>
+                </div>
+                
+                    </td>
+                    </tr> 
+                    
+                        <tr>
+                    <th align="left">Your Facebook App ID</th>
+                    </tr>
+                    <tr>                    
+                    <td>
+                         <div class="main-bx1" style="padding:5px 0px 10px 0px;">
+                        <input type="text" placeholder="your fb app id" name="scsss_clientfb_id" value="<?php echo get_option('scsss_clientfb_id'); ?>" class="input-txt" style="width: 150%;">
+                        </div>
+                      </td>
+                    </tr>       
+                    <tr>
+                    <th align="left">Default sharing image</th>
+                    </tr>
+                    <tr>                    
+                    <td>
+                        <div class="main-bx1" style="padding:5px 0px 10px 0px;">
+                        <input type="text" placeholder="e.g your logo url" name="scsss_default_img" value="<?php echo get_option('scsss_default_img'); ?>" class="input-txt" style="width: 150%;">
+                        </div>
+                      </td>
+                    </tr>
+                    
+                    
+                    <tr>
+                    <th align="left">
+                    Counter Display
+                    </th>
+                    </tr>
+                    <tr>
+                    <td>
+                    
+                    <div class="main-bx1" style="float:left;padding:0 !important;">
+               	
+                
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="counter_type"  id="counter_type_1"  value="0"<?php if($counter_type=='0') { echo ' checked="checked"'; };?> />
+            	<label for="counter_type_1" class="css-label radGroup2">Horizontal</label>
+                </div>
+                
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="counter_type"  id="counter_type_2"  value="1"<?php if($counter_type=='1') { echo ' checked="checked"'; };?> />
+            	<label for="counter_type_2" class="css-label radGroup2">Vertical</label>
+                </div>
+                 <div class="lbls radio-danger">
+               		 <input type="radio" name="counter_type"  id="counter_type_3"  value="2"<?php if($counter_type=='2') { echo ' checked="checked"'; };?> />
+            	<label for="counter_type_3" class="css-label radGroup2">No Counter</label>
+               </div>
+        
+      
+      </div>
+                    </td>
+                    
+                    </tr>
+                    <tr>
+                    <th align="left">
+                    <strong>Short Code : [Soclever_Share_Buttons]</strong>
+                    </th>
+                    </tr>
+                    <tr>     
                     <tr>
                                     <td>
                                         <div class="btn">
@@ -2128,7 +2470,7 @@ function show_custom_images()
       $button_style_arr=array(" Rounded Color","Transparent Grey","Rounded Black","Flower","Glossy","Leaf","Polygon","Rectangular","Rounded Corners","Waterdrop");
 ?>
        <div class="main-bx1" style="float: none;">
-               	<p>Select Your Style</p>
+               	<p><strong>Social Share Bar Style</strong></p>
                 <?php foreach($button_style_arr as $key=>$val) { ?>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="button_style"  id="button_style_<?php echo intval($key+3); ?>" onclick="show_custom_images()" value="<?php echo intval($key+2); ?>"<?php if($button_style==intval($key+2)) { echo ' checked="checked"'; };?> />
@@ -2167,7 +2509,7 @@ function show_custom_images()
       </div>
       
      <div class="main-bx1" style="float: none;">
-               	<p>Button Size</p>
+               	<p><strong>Social Sharing Button Size</strong></p>
        <?php $button_size_arr=array("30x30","32x32","40x40","50x50","60x60","70x70","85x85","100x100");
        
        foreach($button_size_arr as $key=>$val)
@@ -2186,7 +2528,7 @@ function show_custom_images()
        </div>
        
        <div class="main-bx1" style="float: none;">
-               	<p>Display Style</p>
+               	<p><strong>Social Sharing Display Style</strong></p>
                 
                 <div class="lbls radio-danger">
                		 <input type="radio" name="display_style"  id="display_style_1"  value="0"<?php if($display_style=='0') { echo ' checked="checked"'; };?> />
@@ -2207,7 +2549,7 @@ function show_custom_images()
        
        
         <div class="main-bx1" style="float: none;">
-               	<p>Padding Gap</p>
+               	<p><strong>Padding Gap</strong></p>
                 
                 <select name="gap" id="gap" >
                                     <?php for($i=0;$i<=20;$i++) { ?>
@@ -2233,44 +2575,13 @@ function show_custom_images()
         
 
 
-
-     <div id="tab5" style="display: none;">
-
-	  <div class="main-bx1" style="float: none;">
-               	<p>Counter Display</p>
-                
-                <div class="lbls radio-danger">
-               		 <input type="radio" name="counter_type"  id="counter_type_1"  value="0"<?php if($counter_type=='0') { echo ' checked="checked"'; };?> />
-            	<label for="counter_type_1" class="css-label radGroup2">Horizontal</label>
-                </div>
-                
-                <div class="lbls radio-danger">
-               		 <input type="radio" name="counter_type"  id="counter_type_2"  value="1"<?php if($counter_type=='1') { echo ' checked="checked"'; };?> />
-            	<label for="counter_type_2" class="css-label radGroup2">Vertical</label>
-                </div>
-                 <div class="lbls radio-danger">
-               		 <input type="radio" name="counter_type"  id="counter_type_3"  value="2"<?php if($counter_type=='2') { echo ' checked="checked"'; };?> />
-            	<label for="counter_type_3" class="css-label radGroup2">No Counter</label>
-               </div>
-        
-      
-      </div>
-	                                    <div class="btn">
-            <input type="submit" id="button" name="save_share_3"  value="Save"  />
-               	  
-                </div>
-                                  <div style="clear: both;">&nbsp;&nbsp;</div>  
-      
-
-     </div>
-
      <div id="tab6" style="display: none;">
 <div class="box1" style="border: none;" >
             	<h2 class="bov-title">
                 	General Setting
                 </h2>
               <div class="main-bx1">
-               	<p>Enter text to be shown on top of social login box</p>
+               	<p><strong>Enter Caption text to be shown on top of social login box</strong></p>
                 <?php
 									$scsl_caption =(get_option('scsl_caption')) ? get_option('scsl_caption') : 'Login with:';
 								?>
@@ -2278,23 +2589,59 @@ function show_custom_images()
                 </div>
                 
                 <div class="main-bx1">
-               	<p>Please select login button style</p>
+               	<p><strong>Social Login button style</strong></p>
                 <div class="lbls radio-danger">
-               		 <input type="radio" name="scsl_button_style" id="radio3" value="ic" <?php echo (get_option('scsl_button_style') == 'ic' ? 'checked="checked"' : ''); ?> />
+               		 <input type="radio" name="scsl_button_style" id="radio3" value="ic" onclick="show_cscustom_div('none');"  <?php echo (get_option('scsl_button_style') == 'ic' ? 'checked="checked"' : ''); ?> />
             	<label for="radio3" class="css-label radGroup2">Square Icons</label>
                 </div>
                 <div class="lbls radio-danger">
-               		 <input type="radio" name="scsl_button_style" id="radio4" value="fc" <?php echo (get_option('scsl_button_style') == 'fc' ? 'checked="checked"' : ''); ?>  />
+               		 <input type="radio" name="scsl_button_style" id="radio4" value="fc" onclick="show_cscustom_div('none');"  <?php echo (get_option('scsl_button_style') == 'fc' ? 'checked="checked"' : ''); ?>  />
             	<label for="radio4" class="css-label radGroup2">Colored Logos</label>
                 </div>
                 <div class="lbls radio-danger">
-               		 <input type="radio" name="scsl_button_style" id="radio5" value="fg" <?php echo (get_option('scsl_button_style') == 'fg' ? 'checked="checked"' : ''); ?>  />
+               		 <input type="radio" name="scsl_button_style" id="radio5" value="fg" onclick="show_cscustom_div('none');"  <?php echo (get_option('scsl_button_style') == 'fg' ? 'checked="checked"' : ''); ?>  />
             	<label for="radio5" class="css-label radGroup2">Grey Logos</label>
+                </div>
+                <div class="lbls radio-danger">
+               		 <input type="radio" name="scsl_button_style" id="radio6" onclick="show_cscustom_div('inline-block');" value="custom" <?php echo (get_option('scsl_button_style') == 'custom' ? 'checked="checked"' : ''); ?>  />
+            	<label for="radio6" class="css-label radGroup2">Custom</label>
+                <script type="text/javascript">
+                if(typeof show_cscustom_div !='function')
+                {
+                function show_cscustom_div(show_custom)
+                {
+                    
+                    document.getElementById('custom_styles').style.display=show_custom;                
+                    
+                  }
+                
+                }
+                </script>
+                </div>
+                <div id="custom_styles" style="<?php echo (get_option('scsl_button_style')!='custom')?'display:none;':'';  ?>" >
+                
+                <?php 
+                $loginProviderArray=array("fb"=>"Facebook","gp"=>"Google+","tw"=>"Twitter","li"=>"LinkedIN","yh"=>"Yahoo!","ms"=>"Microsoft","pp"=>"PayPal","ig"=>"Instagram");
+                foreach($loginProviderArray as $key=>$val)
+                {
+                ?>
+                
+                <div class="main-bx1" id="<?php echo $key; ?>custom">
+                <p><?php echo $val; ?></p>
+                <input class="input-txt" type="text" name="customlogin_<?php echo $key; ?>" value="<?php echo get_option('customlogin_'.$key.''); ?>">
+                </div>
+                
+                <?php    
+                    
+                }
+                
+                ?>                
+                
                 </div>
               </div>
               
               <div class="main-bx1">
-               	<p>Please select login button size</p>
+               	<p><strong>Social Login button size</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_button_size" id="radio6" value="30" <?php echo (get_option('scsl_button_size') == '30' ? 'checked="checked"' : ''); ?> />
             	<label for="radio6" class="css-label radGroup2">30px</label>
@@ -2318,27 +2665,27 @@ function show_custom_images()
               </div>  
               
               <div class="main-bx1">
-               	<p>Do you want to receive an email when new user registers with social network?</p>
+               	<p><strong>Email when new user registers with social network?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_email_notify" id="radio11" value="1" <?php echo (get_option('scsl_email_notify') == '1' ? 'checked="checked"' : ''); ?> />
             	<label for="radio11" class="css-label radGroup2">Yes</label>
                 </div>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_email_notify" id="radio12" value="0" <?php echo (get_option('scsl_email_notify') == '0' ? 'checked="checked"' : ''); ?>  />
-            	<label for="radio12" class="css-label no radGroup2">NO</label>
+            	<label for="radio12" class="css-label no radGroup2">No</label>
                 </div>
                 
               </div>
               
               <div class="main-bx1">
-               	<p>Do you want user receive an email when he/she registers with social network?</p>
+               	<p><strong>Send email to user on registration with social network?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_email_notify_user" id="radio13" value="1" <?php echo (get_option('scsl_email_notify_user') == '1' ? 'checked="checked"' : ''); ?> />
             	<label for="radio11" class="css-label radGroup2">Yes</label>
                 </div>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_email_notify_user" id="radio14" value="0" <?php echo (get_option('scsl_email_notify_user') == '0' ? 'checked="checked"' : ''); ?>  />
-            	<label for="radio14" class="css-label no radGroup2">NO</label>
+            	<label for="radio14" class="css-label no radGroup2">No</label>
                 </div>
                 
               </div>
@@ -2346,7 +2693,7 @@ function show_custom_images()
               
               
               <div class="main-bx1">
-               	<p>If user's social network has avtar then do you want to use it as default avtar?</p>
+               	<p><strong>Use user's social network avtar as your site's default avtar?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_use_avtar" id="radio15" value="0" <?php echo (get_option('scsl_use_avtar') == '0' ? 'checked="checked"' : ''); ?> />
             	<label for="radio15" class="css-label radGroup2">No</label>
@@ -2365,20 +2712,20 @@ function show_custom_images()
                 </h2>
                 
               <div class="main-bx1">
-               	<p>Do you want to show social login box on comment area?</p>
+               	<p><strong>Display Social login box on comment area?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_show_comment" id="radio18" value="1" <?php echo (get_option('scsl_show_comment') == '1' ? 'checked="checked"' : ''); ?> />
             	<label for="radio18" class="css-label radGroup2">Yes</label>
                 </div>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_show_comment" id="radio19" value="0" <?php echo (get_option('scsl_show_comment') == '0' ? 'checked="checked"' : ''); ?> />
-            	<label for="radio19" class="css-label no radGroup2">NO</label>
+            	<label for="radio19" class="css-label no radGroup2">No</label>
                 </div>
                 
               </div>
               
               <div class="main-bx1">
-               	<p>Show the Social Login buttons in the comment area if comments are disabled for guests?</p>
+               	<p><strong>Show the Social Login buttons in the comment area if comments are disabled for guests?</strong></p>
                 <p>The buttons will be displayed below the "You must be logged in to leave a comment" notice.
                 </p>
                 <div class="lbls radio-danger">
@@ -2393,14 +2740,14 @@ function show_custom_images()
               </div>
               
               <div class="main-bx1">
-               	<p>Do you want to automatically approve comments posted by users who are logged in with social login?	</p>
+               	<p><strong>Approve comments automatically for users who login with Social network?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_comment_auto_approve" id="radio22" value="1" <?php echo (get_option('scsl_comment_auto_approve') == '1' ? 'checked="checked"' : ''); ?> />
             	<label for="radio22" class="css-label radGroup2">Yes</label>
                 </div>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_comment_auto_approve" id="radio23" value="1" <?php echo (get_option('scsl_comment_auto_approve') == '0' ? 'checked="checked"' : ''); ?> />
-            	<label for="radio23" class="css-label no radGroup2">NO</label>
+            	<label for="radio23" class="css-label no radGroup2">No</label>
                 </div>
                 
               </div>
@@ -2412,20 +2759,20 @@ function show_custom_images()
                 </h2>
                 
               <div class="main-bx1">
-               	<p>Do you want show login buttons in login form?</p>
+               	<p><strong>Display login buttons in login form?</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_show_in_loginform" id="radio24" value="1" <?php echo (get_option('scsl_show_in_loginform') == '1' ? 'checked="checked"' : ''); ?>  />
             	<label for="radio24" class="css-label radGroup2">Yes</label>
                 </div>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_show_in_loginform" value="0" id="radio25" <?php echo (get_option('scsl_show_in_loginform') == '0' ? 'checked="checked"' : ''); ?>  />
-            	<label for="radio25" class="css-label no radGroup2">NO</label>
+            	<label for="radio25" class="css-label no radGroup2">No</label>
                 </div>
                 
               </div>
               
               <div class="main-bx1">
-               	<p>Where user should be redirected after login from login page?</p>
+               	<p><strong>Choose landing page after login</strong></p>
                 <div class="lbls radio-danger">
                		 <input type="radio" name="scsl_login_form_redirect" value="current" id="radio26" <?php echo (get_option('scsl_login_form_redirect') == 'current' ? 'checked="checked"' : ''); ?>  />
             	<label for="radio26" class="css-label radGroup2">Current page</label>
@@ -2656,7 +3003,7 @@ function show_custom_images()
             </div>
             
             <div class="r-video">
-            	<p>How to Create Facebook App for Website</p>
+            	<p><strong>How to Create Facebook App for Website</strong></p>
                 <?php add_thickbox(); ?>
                 <a href="<?php echo admin_url('admin-ajax.php')."?action=scslvideo"; ?>?TB_iframe=true&width=600&height=400" class="thickbox">
                   <img src="<?php echo plugins_url('scss_css/video.png', __FILE__); ?>" alt="How to Create Facebook App for Website"/>       
@@ -2672,6 +3019,7 @@ function show_custom_images()
                     <p><a href="https://wordpress.org/support/view/plugin-reviews/social-login-sharing-buttons-with-analytics-by-soclever" target="_blank">Rate Us</a></p>
                 </div>
             </div>
+			
         </div>
 
 </div>
